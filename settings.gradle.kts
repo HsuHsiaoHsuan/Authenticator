@@ -21,3 +21,4 @@ dependencyResolutionManagement {
 
 rootProject.name = "Authenticator"
 include(":app")
+include(":app:data")

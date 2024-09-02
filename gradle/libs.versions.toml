@@ -1,6 +1,6 @@
 [versions]
 agp = "8.6.0"
-kotlin = "2.0.0"
+kotlin = "2.0.20"
 coreKtx = "1.13.1"
 junit = "4.13.2"
 junitVersion = "1.2.1"
@@ -19,6 +19,9 @@ fragmentKtx = "1.8.2"
 zxing-android-embedded = "4.3.0"
 zxing-core = "3.5.0"
 timber = "5.0.1"
+room = "2.6.1"
+ksp = "2.0.20-1.0.24"
+hilt = "2.52"
 
 [libraries]
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
@@ -39,10 +42,19 @@ androidx-fragment-ktx = { group = "androidx.fragment", name = "fragment-ktx", ve
 zxing-android-embedded = { group = "com.journeyapps", name = "zxing-android-embedded", version.ref = "zxing-android-embedded" }
 zxing-core = { group = "com.google.zxing", name = "core", version.ref = "zxing-core" }
 timber = { group = "com.jakewharton.timber", name = "timber", version.ref = "timber" }
+room = { group = "androidx.room", name = "room-runtime", version.ref = "room" }
+room-ktx = { group = "androidx.room", name = "room-ktx", version.ref = "room" }
+room-compiler = { group = "androidx.room", name = "room-compiler", version.ref = "room" }
+hilt = { group = "com.google.dagger", name = "hilt-android", version.ref = "hilt" }
+hilt-compiler = { group = "com.google.dagger", name = "hilt-android-compiler", version.ref = "hilt" }
 
 [bundles]
 zxing = ["zxing-android-embedded", "zxing-core"]
+room = ["room", "room-ktx"]
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }
 kotlin-android = { id = "org.jetbrains.kotlin.android", version.ref = "kotlin" }
+android-library = { id = "com.android.library", version.ref = "agp" }
+ksp = { id = "com.google.devtools.ksp", version.ref = "ksp" }
+hilt-plugin = { id = "com.google.dagger.hilt.android", version.ref = "hilt" }
