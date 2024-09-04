@@ -3,12 +3,17 @@ package idv.hsu.authenticator
 import android.app.Application
 import android.util.Log
 import dagger.hilt.android.HiltAndroidApp
+import idv.hsu.authenticator.utils.SecretKeyUtils
 import timber.log.Timber
 
 @HiltAndroidApp
 class MyApp : Application() {
     override fun onCreate() {
         super.onCreate()
+
+        if (!SecretKeyUtils.isKeyGenerated()) {
+            SecretKeyUtils.generateKey()
+        }
 
         if (resources.getBoolean(R.bool.isDebug)) {
             Timber.plant(object : Timber.DebugTree() {

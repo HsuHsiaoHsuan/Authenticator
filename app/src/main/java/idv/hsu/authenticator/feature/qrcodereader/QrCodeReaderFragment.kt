@@ -1,6 +1,5 @@
-package idv.hsu.authenticator
+package idv.hsu.authenticator.feature.qrcodereader
 
-import android.net.Uri
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -84,23 +83,12 @@ class QrCodeReaderFragment : Fragment() {
 
     private fun handleQRCodeData(qrCodeData: String) {
         Timber.d("QR Code Data: $qrCodeData")
-        viewModel.onIntent(QrCodeReaderIntent.SaveTOPTAccount(qrCodeData))
-//        if (qrCodeData.startsWith("otpauth://totp/")) {
-//            val uri = Uri.parse(qrCodeData)
-//            val accountName = uri.path?.substring(1) // 去掉前面的 "/"
-//            val secret = uri.getQueryParameter("secret")
-//            val issuer = uri.getQueryParameter("issuer")
-//
-//            if (secret != null && accountName != null) {
-//                Timber.d("accountName: $accountName")
-//                Timber.d("secret: $secret")
-//                Timber.d("issuer: $issuer")
-//            } else {
-//                Toast.makeText(context, "Invalid QR Code", Toast.LENGTH_LONG).show()
-//            }
-//        } else {
-//            Toast.makeText(context, "Unsupported QR Code format", Toast.LENGTH_LONG).show()
-//        }
+        viewModel.onIntent(QrCodeReaderIntent.SaveTOTPAccount(qrCodeData))
+    }
+
+    override fun onDestroyView() {
+        super.onDestroyView()
+        _binding = null
     }
 
     companion object {

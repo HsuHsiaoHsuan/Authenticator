@@ -1,9 +1,8 @@
-package idv.hsu.authenticator
+package idv.hsu.authenticator.feature.qrcodereader
 
 import android.net.Uri
-import android.widget.Toast
-import androidx.lifecycle.ViewModel
 import dagger.hilt.android.lifecycle.HiltViewModel
+import idv.hsu.authenticator.MVIViewModel
 import idv.hsu.authenticator.data.local.TOTPAccount
 import idv.hsu.authenticator.domain.DbDeleteAccountUseCase
 import idv.hsu.authenticator.domain.DbGetAccountUseCase
@@ -23,7 +22,7 @@ class QrCodeReaderViewModel @Inject constructor(
 ) {
     override suspend fun handleIntent(intent: QrCodeReaderIntent) {
         when (intent) {
-            is QrCodeReaderIntent.SaveTOPTAccount -> {
+            is QrCodeReaderIntent.SaveTOTPAccount -> {
                 val qrCodeData = intent.totpData
                 setUiState(QrCodeReaderUiState.Loading)
                 if (qrCodeData.startsWith("otpauth://totp/")) {
@@ -31,18 +30,19 @@ class QrCodeReaderViewModel @Inject constructor(
                     val accountName = uri.path?.substring(1) // 去掉前面的 "/"
                     val secret = uri.getQueryParameter("secret")
                     val issuer = uri.getQueryParameter("issuer")
-                    Timber.d("accountName: $accountName")
-                    Timber.d("secret: $secret")
-                    Timber.d("issuer: $issuer")
+                    Timber.d("insert accountName: $accountName")
+                    Timber.d("insert secret: $secret")
+                    Timber.d("insert issuer: $issuer")
 
                     if (secret != null && accountName != null) {
-                        dbInsertAccountUseCase(
+                        val result = dbInsertAccountUseCase(
                             TOTPAccount(
                                 accountName = accountName,
                                 secret = secret,
                                 issuer = issuer
                             )
                         )
+                        Timber.d("Insert result: $result")
                     } else {
                         setUiState(QrCodeReaderUiState.SaveTOPTDataFailed("Invalid QR Code"))
                     }
@@ -57,7 +57,7 @@ class QrCodeReaderViewModel @Inject constructor(
 
 
 sealed class QrCodeReaderIntent {
-    data class SaveTOPTAccount(val totpData: String) : QrCodeReaderIntent()
+    data class SaveTOTPAccount(val totpData: String) : QrCodeReaderIntent()
 }
 
 sealed class QrCodeReaderUiState {

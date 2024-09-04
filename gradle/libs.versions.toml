@@ -22,6 +22,7 @@ timber = "5.0.1"
 room = "2.6.1"
 ksp = "2.0.20-1.0.24"
 hilt = "2.52"
+circle-imageview = "3.1.0"
 
 [libraries]
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
@@ -47,6 +48,7 @@ room-ktx = { group = "androidx.room", name = "room-ktx", version.ref = "room" }
 room-compiler = { group = "androidx.room", name = "room-compiler", version.ref = "room" }
 hilt = { group = "com.google.dagger", name = "hilt-android", version.ref = "hilt" }
 hilt-compiler = { group = "com.google.dagger", name = "hilt-android-compiler", version.ref = "hilt" }
+circle-imageview = { group = "de.hdodenhof", name = "circleimageview", version.ref = "circle-imageview" }
 
 [bundles]
 zxing = ["zxing-android-embedded", "zxing-core"]

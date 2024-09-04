@@ -8,7 +8,7 @@ import androidx.room.Query
 @Dao
 interface TOTPAccountDao {
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    suspend fun insertAccount(account: TOTPAccount)
+    suspend fun insertAccount(account: TOTPAccount): Long
 
     @Query("SELECT * FROM totp_accounts WHERE accountName = :accountName")
     suspend fun getAccountByName(accountName: String): TOTPAccount?
@@ -17,5 +17,5 @@ interface TOTPAccountDao {
     suspend fun getAllAccounts(): List<TOTPAccount>
 
     @Query("DELETE FROM totp_accounts WHERE accountName = :accountName")
-    suspend fun deleteAccountByName(accountName: String)
+    suspend fun deleteAccountByName(accountName: String): Int
 }

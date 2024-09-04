@@ -64,6 +64,7 @@ dependencies {
     implementation(libs.timber)
     implementation(libs.hilt)
     ksp(libs.hilt.compiler)
+    implementation(libs.circle.imageview)
 
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)

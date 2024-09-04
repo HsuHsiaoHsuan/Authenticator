@@ -8,8 +8,8 @@ class TotpRepository @Inject constructor(
     private val totpAccountDao: TOTPAccountDao
 ) {
 
-    suspend fun insertAccount(account: TOTPAccount) {
-        totpAccountDao.insertAccount(account)
+    suspend fun insertAccount(account: TOTPAccount): Long {
+        return totpAccountDao.insertAccount(account)
     }
 
     suspend fun getAccountByName(accountName: String): TOTPAccount? {
@@ -20,7 +20,7 @@ class TotpRepository @Inject constructor(
         return totpAccountDao.getAllAccounts()
     }
 
-    suspend fun deleteAccountByName(accountName: String) {
-        totpAccountDao.deleteAccountByName(accountName)
+    suspend fun deleteAccountByName(accountName: String): Int {
+        return totpAccountDao.deleteAccountByName(accountName)
     }
 }

@@ -2,4 +2,23 @@
 <resources>
     <color name="black">#FF000000</color>
     <color name="white">#FFFFFFFF</color>
+    <color name="light_blue_600">#FF039BE5</color>
+    <color name="light_blue_900">#FF01579B</color>
+    <color name="light_blue_A200">#FF40C4FF</color>
+    <color name="light_blue_A400">#FF00B0FF</color>
+    <color name="black_overlay">#66000000</color>
+
+    <color name="totp_issuer">#151D20</color>
+    <color name="totp_account">#A4ADB0</color>
+
+    <color name="colorPrimary50">#E3F4FD</color>
+    <color name="colorPrimary100">#B9E3FA</color>
+    <color name="colorPrimary200">#8ED0F5</color>
+    <color name="colorPrimary300">#8ED0F5</color>
+    <color name="colorPrimary400">#69BEEF</color>
+    <color name="colorPrimary500">#4BA3E8</color>
+    <color name="colorPrimary600">#4795D8</color>
+    <color name="colorPrimary700">#4183C4</color>
+    <color name="colorPrimary800">#3A72B0</color>
+    <color name="colorPrimary900">#2F528E</color>
 </resources>
