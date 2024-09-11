@@ -1,5 +1,7 @@
 package idv.hsu.authenticator.feature.totplist
 
+import android.os.CountDownTimer
+import android.util.Log
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -24,6 +26,8 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.mutableLongStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
@@ -31,6 +35,7 @@ import androidx.compose.ui.graphics.Shape
 import androidx.compose.ui.graphics.StrokeCap
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.constraintlayout.compose.ChainStyle
@@ -40,6 +45,7 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.viewmodel.compose.viewModel
 import idv.hsu.authenticator.R
 import idv.hsu.authenticator.model.TotpDataItem
+import kotlinx.coroutines.delay
 
 @Composable
 fun TotpScreen(
@@ -48,8 +54,16 @@ fun TotpScreen(
     val viewModel: TotpViewModel = viewModel()
     val uiState = viewModel.uiStateFlow.collectAsStateWithLifecycle().value
 
+    val (remainingTime, setRemainingTime) = remember { mutableLongStateOf(30L) }
+    val (progress, setProgress) = remember { mutableLongStateOf(1L) }
+
     LaunchedEffect(Unit) {
         viewModel.onIntent(TotpIntent.LoadTOTPAccounts)
+        while (true) {
+            val timeRemaining = 30L - ((System.currentTimeMillis() / 1000) % 30L)
+            setRemainingTime(timeRemaining)
+            delay(1000L)
+        }
     }
 
     Scaffold(
@@ -76,7 +90,7 @@ fun TotpScreen(
                             account.accountName,
                             account.secret,
                             account.issuer,
-                            0L
+                            remainingTime
                         )
                     },
                     modifier = Modifier.padding(paddingValues)
@@ -103,6 +117,8 @@ fun TotpList(items: List<TotpDataItem>, modifier: Modifier = Modifier) {
 
 @Composable
 fun TotpListItem(item: TotpDataItem) {
+    val progress = item.remainingTime / 30f
+
     Card(
         modifier = Modifier
             .fillMaxWidth()
@@ -146,6 +162,8 @@ fun TotpListItem(item: TotpDataItem) {
 
             Text(
                 text = item.accountName,
+                maxLines = 2,
+                overflow = TextOverflow.Ellipsis,
                 style = MaterialTheme.typography.body2,
                 modifier = Modifier.constrainAs(textAccountName) {
                     start.linkTo(textIssuer.start)
@@ -167,7 +185,7 @@ fun TotpListItem(item: TotpDataItem) {
             )
 
             LinearProgressIndicator(
-                progress = 0.5f,
+                progress = progress,
                 modifier = Modifier
                     .constrainAs(progressBar) {
                         start.linkTo(textPasscode.start)
