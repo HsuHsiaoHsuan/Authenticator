@@ -8,18 +8,19 @@ import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import idv.hsu.authenticator.data.local.TOTPAccount
 import idv.hsu.authenticator.databinding.ItemTotpAccountBinding
+import idv.hsu.authenticator.model.TotpDataItem
 import idv.hsu.authenticator.utils.generateTOTP
 
-class TotpAdapter(private val onClick: (TOTPAccount) -> Unit) :
-    ListAdapter<TOTPAccount, TotpAdapter.TotpViewHolder>(TotpDiffCallback) {
+class TotpAdapter(private val onClick: (TotpDataItem) -> Unit) :
+    ListAdapter<TotpDataItem, TotpAdapter.TotpViewHolder>(TotpDiffCallback) {
 
     inner class TotpViewHolder(
         private val binding: ItemTotpAccountBinding,
-        val onClick: (TOTPAccount) -> Unit
+        val onClick: (TotpDataItem) -> Unit
     ) : RecyclerView.ViewHolder(binding.root) {
         var countdownTimer: CountDownTimer? = null
 
-        fun bind(data: TOTPAccount) {
+        fun bind(data: TotpDataItem) {
             binding.root.setOnClickListener {
                 onClick(data)
             }
@@ -58,12 +59,12 @@ class TotpAdapter(private val onClick: (TOTPAccount) -> Unit) :
     }
 }
 
-object TotpDiffCallback : DiffUtil.ItemCallback<TOTPAccount>() {
-    override fun areItemsTheSame(oldItem: TOTPAccount, newItem: TOTPAccount): Boolean {
+object TotpDiffCallback : DiffUtil.ItemCallback<TotpDataItem>() {
+    override fun areItemsTheSame(oldItem: TotpDataItem, newItem: TotpDataItem): Boolean {
         return oldItem.id == newItem.id
     }
 
-    override fun areContentsTheSame(oldItem: TOTPAccount, newItem: TOTPAccount): Boolean {
+    override fun areContentsTheSame(oldItem: TotpDataItem, newItem: TotpDataItem): Boolean {
         return oldItem.issuer == newItem.issuer &&
                 oldItem.accountName == newItem.accountName &&
                 oldItem.secret == newItem.secret

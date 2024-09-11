@@ -18,6 +18,7 @@ class TotpViewModel @Inject constructor(
 ) : MVIViewModel<TotpIntent, TotpUiState>(
     initialUi = TotpUiState.Idle
 ) {
+
     override suspend fun handleIntent(intent: TotpIntent) {
         when (intent) {
             is TotpIntent.LoadTOTPAccounts -> {
