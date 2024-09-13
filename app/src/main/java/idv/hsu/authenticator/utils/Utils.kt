@@ -8,7 +8,7 @@ import javax.crypto.spec.SecretKeySpec
 import org.apache.commons.codec.binary.Base32
 import timber.log.Timber
 
-fun generateTOTP(secret: String, time: Long, timeStepSeconds: Long = 30): Pair<String, Long> {
+fun generateTOTPWithTime(secret: String, time: Long, timeStepSeconds: Long = 30): Pair<String, Long> {
     val decryptedSecret = SecretKeyUtils.decryptWithKeystore(secret)
     val key = Base32().decode(decryptedSecret)
     val hmacKey = SecretKeySpec(key, "HmacSHA1")
@@ -32,6 +32,30 @@ fun generateTOTP(secret: String, time: Long, timeStepSeconds: Long = 30): Pair<S
     val timeRemaining = timeStepSeconds - (time % timeStepSeconds)
 
     return Pair(otpString, timeRemaining)
+}
+
+fun generateTOTP(secret: String, time: Long, timeStepSeconds: Long = 30): String {
+    val decryptedSecret = SecretKeyUtils.decryptWithKeystore(secret)
+    val key = Base32().decode(decryptedSecret)
+    val hmacKey = SecretKeySpec(key, "HmacSHA1")
+
+    val timeCounter = time / timeStepSeconds
+    val data = ByteBuffer.allocate(8).putLong(timeCounter).array()
+
+    val mac = Mac.getInstance("HmacSHA1")
+    mac.init(hmacKey)
+    val hash = mac.doFinal(data)
+
+    val offset = hash.last().toInt() and 0xf
+    val binary = (hash[offset].toInt() and 0x7f shl 24) or
+            (hash[offset + 1].toInt() and 0xff shl 16) or
+            (hash[offset + 2].toInt() and 0xff shl 8) or
+            (hash[offset + 3].toInt() and 0xff)
+
+    val otp = binary % 1000000
+    val otpString = String.format("%06d", otp)
+
+    return otpString
 }
 
 fun convertTotpDataToTOTPAccount(qrCodeData: String): TOTPAccount? {

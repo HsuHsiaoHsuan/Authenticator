@@ -10,6 +10,7 @@ import idv.hsu.authenticator.data.local.TOTPAccount
 import idv.hsu.authenticator.databinding.ItemTotpAccountBinding
 import idv.hsu.authenticator.model.TotpDataItem
 import idv.hsu.authenticator.utils.generateTOTP
+import idv.hsu.authenticator.utils.generateTOTPWithTime
 
 class TotpAdapter(private val onClick: (TotpDataItem) -> Unit) :
     ListAdapter<TotpDataItem, TotpAdapter.TotpViewHolder>(TotpDiffCallback) {
@@ -26,7 +27,7 @@ class TotpAdapter(private val onClick: (TotpDataItem) -> Unit) :
             }
             binding.textAccountIssuer.text = data.issuer ?: ""
             binding.textAccountName.text = data.accountName
-            val (a, b) = generateTOTP(data.secret, System.currentTimeMillis() / 1000)
+            val (a, b) = generateTOTPWithTime(data.secret, System.currentTimeMillis() / 1000)
             binding.textPasscode.text = a
 
             countdownTimer?.cancel()

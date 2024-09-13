@@ -21,4 +21,6 @@
     <color name="colorPrimary700">#4183C4</color>
     <color name="colorPrimary800">#3A72B0</color>
     <color name="colorPrimary900">#2F528E</color>
+
+    <color name="white_59">#96FFFFFF</color>
 </resources>

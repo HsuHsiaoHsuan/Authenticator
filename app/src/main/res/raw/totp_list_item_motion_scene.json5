@@ -1,0 +1,35 @@
+{
+  ConstraintSets: {
+    start: {
+      textColumn: {
+        top: ['parent', 'top', 0],
+        start: ['imageLogo', 'end', 8],
+        bottom: ['parent', 'bottom', 0],
+      }
+    },
+    end: {
+      textColumn: {
+        top: ['imageArrowBack', 'top', 0],
+        start: ['imageArrowBack', 'end', 8],
+        bottom: ['imageArrowBack', 'bottom', 0],
+      }
+    }
+  },
+  Transitions: {
+    default: {
+      from: 'start',
+      to: 'end',
+      pathMotionArc: 'startVertical',
+      KeyFrames: {
+        KeyAttributes: [
+          {
+            target: ['textColumn'],
+            frames: [0, 100],
+            scaleX: [1, 0.5],
+            scaleY: [1, 0.5]
+          }
+        ]
+      }
+    }
+  }
+}
