@@ -1,7 +1,7 @@
-package idv.hsu.authenticator.feature.totplist
+package idv.hsu.authenticator.presentation.screen.totplist
 
-import androidx.compose.animation.core.animateDpAsState
-import androidx.compose.animation.core.animateFloatAsState
+import androidx.compose.animation.core.animateDp
+import androidx.compose.animation.core.updateTransition
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -19,19 +19,26 @@ import androidx.compose.foundation.layout.windowInsetsPadding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material.Card
-import androidx.compose.material.FloatingActionButton
-import androidx.compose.material.Icon
-import androidx.compose.material.LinearProgressIndicator
-import androidx.compose.material.MaterialTheme
-import androidx.compose.material.Text
-import androidx.compose.material.TopAppBar
+//import androidx.compose.material.Card
+//import androidx.compose.material.FloatingActionButton
+//import androidx.compose.material.Icon
+//import androidx.compose.material.LinearProgressIndicator
+//import androidx.compose.material.MaterialTheme
+//import androidx.compose.material.Text
+//import androidx.compose.material.TopAppBar
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
+import androidx.compose.material3.Card
+import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.FloatingActionButton
+import androidx.compose.material3.Icon
+import androidx.compose.material3.LinearProgressIndicator
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Text
+import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableLongStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
@@ -41,6 +48,7 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.StrokeCap
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.layout.layoutId
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.painterResource
@@ -50,34 +58,28 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.constraintlayout.compose.ChainStyle
 import androidx.constraintlayout.compose.ConstraintLayout
 import androidx.constraintlayout.compose.Dimension
 import androidx.constraintlayout.compose.ExperimentalMotionApi
+import androidx.constraintlayout.compose.MotionLayout
+import androidx.constraintlayout.compose.MotionScene
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.viewmodel.compose.viewModel
 import idv.hsu.authenticator.R
-import idv.hsu.authenticator.model.TotpDataItem
-import idv.hsu.authenticator.utils.generateTOTP
-import kotlinx.coroutines.delay
+import idv.hsu.authenticator.data.entities.TotpDataItem
+import idv.hsu.authenticator.presentation.utils.generateTOTP
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun TotpScreen(
     onFabClick: () -> Unit
 ) {
     val viewModel: TotpViewModel = viewModel<TotpViewModel>()
     val uiState = viewModel.uiStateFlow.collectAsStateWithLifecycle().value
-
-    val (remainingTime, setRemainingTime) = remember { mutableLongStateOf(30L) }
-
+    val remainingTime by viewModel.remainingTime.collectAsStateWithLifecycle()
 
     LaunchedEffect(Unit) {
         viewModel.onIntent(TotpIntent.LoadTOTPAccounts)
-        while (true) {
-            val timeRemaining = 30L - ((System.currentTimeMillis() / 1000) % 30L)
-            setRemainingTime(timeRemaining)
-            delay(1000L)
-        }
     }
 
     ConstraintLayout(
@@ -128,7 +130,6 @@ fun TotpScreen(
 
         FloatingActionButton(
             onClick = onFabClick,
-            backgroundColor = colorResource(R.color.white_59),
             contentColor = colorResource(R.color.white_59),
             modifier = Modifier
                 .size(62.dp)
@@ -136,6 +137,7 @@ fun TotpScreen(
                     end.linkTo(parent.end, margin = 40.dp)
                     bottom.linkTo(parent.bottom, margin = 45.dp)
                 }
+                .background(color = colorResource(R.color.white_59))
         ) {
             Icon(imageVector = Icons.Filled.Add, contentDescription = "Add")
         }
@@ -162,28 +164,27 @@ fun TotpList(items: List<TotpDataItem>, modifier: Modifier = Modifier) {
 @OptIn(ExperimentalMotionApi::class)
 @Composable
 fun TotpListItem(item: TotpDataItem) {
-    val progress = item.remainingTime / 30f
-
-
     var isShowingPasscode by remember { mutableStateOf(false) }
-    val sizeOfIssuer by animateDpAsState(
-        targetValue = if (isShowingPasscode) 12.dp else 20.dp,
-        label = "Issuer Text Size"
-    )
-    val sizeOfAccountName by animateDpAsState(
-        targetValue = if (isShowingPasscode) 10.dp else 12.dp,
-        label = "Account Name Text Size"
-    )
+    val transition =
+        updateTransition(targetState = isShowingPasscode, label = "Passcode Transition")
+    val sizeOfIssuer by transition.animateDp(
+        label = "Issuer Text Size",
+    ) { state ->
+        if (state) 12.dp else 20.dp
+    }
+    val sizeOfAccountName by transition.animateDp(
+        label = "Account Name Text Size",
+    ) { state ->
+        if (state) 10.dp else 12.dp
+    }
 
     val context = LocalContext.current
     val motionScene = remember {
-        context.resources.openRawResource(R.raw.totp_list_item_motion_scene)
-            .bufferedReader().use { it.readText() }
+        context.resources
+            .openRawResource(R.raw.totp_list_item_motion_scene)
+            .readBytes()
+            .decodeToString()
     }
-    val motionProgress by animateFloatAsState(
-        if (isShowingPasscode) 1f else 0f,
-        label = "animation progress"
-    )
 
     Card(
         modifier = Modifier
@@ -192,27 +193,20 @@ fun TotpListItem(item: TotpDataItem) {
             .padding(8.dp),
         shape = RoundedCornerShape(12.dp),
     ) {
-        ConstraintLayout(
-//            motionScene = MotionScene(content = motionScene),
-//            progress = motionProgress,
+        MotionLayout(
+            motionScene = MotionScene(content = motionScene),
+            progress = if (isShowingPasscode) 1f else 0f,
             modifier = Modifier
                 .fillMaxSize()
                 .background(Color.White)
         ) {
-            val (imageArrowBack, imageLogo, textColumn, passCodeColumn, textPasscode, progressBar, imageCopy) = createRefs()
-            val verticalChainTwo =
-                createVerticalChain(textPasscode, progressBar, chainStyle = ChainStyle.Packed)
-
             if (isShowingPasscode) {
                 Image(
                     painter = painterResource(id = R.drawable.ic_arrow_back_16),
                     contentDescription = null,
                     modifier = Modifier
                         .size(16.dp)
-                        .constrainAs(imageArrowBack) {
-                            start.linkTo(parent.start, margin = 4.dp)
-                            top.linkTo(parent.top, margin = 15.5.dp)
-                        }
+                        .layoutId("imageArrowBack")
                         .clickable { isShowingPasscode = false }
                 )
             }
@@ -223,11 +217,7 @@ fun TotpListItem(item: TotpDataItem) {
                     contentDescription = null,
                     modifier = Modifier
                         .size(36.dp)
-                        .constrainAs(imageLogo) {
-                            start.linkTo(parent.start, margin = 12.dp)
-                            top.linkTo(parent.top)
-                            bottom.linkTo(parent.bottom)
-                        },
+                        .layoutId("imageLogo"),
                     contentScale = ContentScale.Crop
                 )
             }
@@ -236,21 +226,15 @@ fun TotpListItem(item: TotpDataItem) {
                 item = item,
                 sizeOfIssuer = sizeOfIssuer,
                 sizeOfAccountName = sizeOfAccountName,
-                modifier = Modifier.constrainAs(textColumn) {
-                    start.linkTo(imageLogo.end, margin = 8.dp)
-                    top.linkTo(parent.top)
-                    bottom.linkTo(parent.bottom)
-                }
+                modifier = Modifier
+                    .layoutId("accountColumn")
             )
 
             PasscodeBlock(
                 item = item,
                 onPasscodeClick = { isShowingPasscode = !isShowingPasscode },
-                modifier = Modifier.constrainAs(passCodeColumn) {
-                    end.linkTo(parent.end, margin = 20.dp)
-                    top.linkTo(parent.top)
-                    bottom.linkTo(parent.bottom)
-                }
+                modifier = Modifier
+                    .layoutId("passCodeColumn")
             )
         }
     }
@@ -298,7 +282,7 @@ fun PasscodeBlock(
 
             Text(
                 text = item.secret,
-                style = MaterialTheme.typography.h4,
+                style = MaterialTheme.typography.bodySmall,
                 modifier = Modifier
                     .constrainAs(textPasscode) {
                         start.linkTo(parent.start)
@@ -309,7 +293,7 @@ fun PasscodeBlock(
             )
 
             LinearProgressIndicator(
-                progress = progress,
+                progress = { progress },
                 color = colorResource(id = R.color.colorPrimary400),
                 modifier = Modifier
                     .constrainAs(progressBar) {

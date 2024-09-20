@@ -8,12 +8,12 @@ plugins {
 
 android {
     namespace = "idv.hsu.authenticator"
-    compileSdk = 34
+    compileSdk = 35
 
     defaultConfig {
         applicationId = "idv.hsu.authenticator"
         minSdk = 24
-        targetSdk = 34
+        targetSdk = 35
         versionCode = 1
         versionName = "1.0"
 

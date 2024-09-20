@@ -1,7 +1,7 @@
-package idv.hsu.authenticator.feature.splash
+package idv.hsu.authenticator.presentation.screen.splash
 
 import dagger.hilt.android.lifecycle.HiltViewModel
-import idv.hsu.authenticator.MVIViewModel
+import idv.hsu.authenticator.presentation.widget.MVIViewModel
 import idv.hsu.authenticator.domain.DbGetAllAccountsUseCase
 import javax.inject.Inject
 

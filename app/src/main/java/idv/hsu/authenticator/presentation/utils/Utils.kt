@@ -1,7 +1,8 @@
-package idv.hsu.authenticator.utils
+package idv.hsu.authenticator.presentation.utils
 
 import android.net.Uri
 import idv.hsu.authenticator.data.local.TOTPAccount
+import idv.hsu.authenticator.utils.SecretKeyUtils
 import java.nio.ByteBuffer
 import javax.crypto.Mac
 import javax.crypto.spec.SecretKeySpec

@@ -1,4 +1,4 @@
-package idv.hsu.authenticator.widget
+package idv.hsu.authenticator.presentation.widget
 
 import android.graphics.Rect
 import android.view.View

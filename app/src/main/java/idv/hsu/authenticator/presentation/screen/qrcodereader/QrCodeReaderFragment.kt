@@ -1,4 +1,4 @@
-package idv.hsu.authenticator.feature.qrcodereader
+package idv.hsu.authenticator.presentation.screen.qrcodereader
 
 import android.os.Bundle
 import android.view.LayoutInflater

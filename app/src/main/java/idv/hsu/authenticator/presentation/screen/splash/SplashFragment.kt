@@ -1,4 +1,4 @@
-package idv.hsu.authenticator.feature.splash
+package idv.hsu.authenticator.presentation.screen.splash
 
 import android.os.Bundle
 import android.os.Handler
@@ -16,8 +16,8 @@ import androidx.lifecycle.repeatOnLifecycle
 import dagger.hilt.android.AndroidEntryPoint
 import idv.hsu.authenticator.R
 import idv.hsu.authenticator.databinding.FragmentSplashBinding
-import idv.hsu.authenticator.feature.qrcodereader.QrCodeReaderFragment
-import idv.hsu.authenticator.feature.totplist.TotpFragment
+import idv.hsu.authenticator.presentation.screen.qrcodereader.QrCodeReaderFragment
+import idv.hsu.authenticator.presentation.screen.totplist.TotpFragment
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 

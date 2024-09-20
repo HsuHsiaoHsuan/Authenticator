@@ -1,4 +1,4 @@
-package idv.hsu.authenticator.model
+package idv.hsu.authenticator.data.entities
 
 data class TotpDataItem(
     val id: Int = 0,

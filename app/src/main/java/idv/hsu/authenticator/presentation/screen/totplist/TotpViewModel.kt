@@ -1,14 +1,18 @@
-package idv.hsu.authenticator.feature.totplist
+package idv.hsu.authenticator.presentation.screen.totplist
 
+import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
-import idv.hsu.authenticator.MVIViewModel
+import idv.hsu.authenticator.presentation.widget.MVIViewModel
 import idv.hsu.authenticator.data.local.TOTPAccount
 import idv.hsu.authenticator.domain.DbDeleteAccountUseCase
 import idv.hsu.authenticator.domain.DbGetAllAccountsUseCase
 import idv.hsu.authenticator.domain.DbInsertAccountUseCase
-import idv.hsu.authenticator.feature.qrcodereader.QrCodeReaderUiState
-import idv.hsu.authenticator.utils.convertTotpDataToTOTPAccount
+import idv.hsu.authenticator.presentation.utils.convertTotpDataToTOTPAccount
 import javax.inject.Inject
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.launch
 
 @HiltViewModel
 class TotpViewModel @Inject constructor(
@@ -18,6 +22,18 @@ class TotpViewModel @Inject constructor(
 ) : MVIViewModel<TotpIntent, TotpUiState>(
     initialUi = TotpUiState.Idle
 ) {
+    private val _remainingTime = MutableStateFlow(30L)
+    val remainingTime: StateFlow<Long> = _remainingTime
+
+    init {
+        viewModelScope.launch {
+            while (true) {
+                val timeRemaining = 30L - ((System.currentTimeMillis() / 1000) % 30L)
+                _remainingTime.value = timeRemaining
+                delay(1000L)
+            }
+        }
+    }
 
     override suspend fun handleIntent(intent: TotpIntent) {
         when (intent) {

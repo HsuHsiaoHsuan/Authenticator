@@ -1,4 +1,4 @@
-package idv.hsu.authenticator.feature.totplist
+package idv.hsu.authenticator.presentation.screen.totplist
 
 import android.os.Bundle
 import android.view.LayoutInflater

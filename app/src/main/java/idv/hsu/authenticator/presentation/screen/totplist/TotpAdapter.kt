@@ -1,4 +1,4 @@
-package idv.hsu.authenticator.feature.totplist
+package idv.hsu.authenticator.presentation.screen.totplist
 
 import android.os.CountDownTimer
 import android.view.LayoutInflater
@@ -6,11 +6,9 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
-import idv.hsu.authenticator.data.local.TOTPAccount
 import idv.hsu.authenticator.databinding.ItemTotpAccountBinding
-import idv.hsu.authenticator.model.TotpDataItem
-import idv.hsu.authenticator.utils.generateTOTP
-import idv.hsu.authenticator.utils.generateTOTPWithTime
+import idv.hsu.authenticator.data.entities.TotpDataItem
+import idv.hsu.authenticator.presentation.utils.generateTOTPWithTime
 
 class TotpAdapter(private val onClick: (TotpDataItem) -> Unit) :
     ListAdapter<TotpDataItem, TotpAdapter.TotpViewHolder>(TotpDiffCallback) {

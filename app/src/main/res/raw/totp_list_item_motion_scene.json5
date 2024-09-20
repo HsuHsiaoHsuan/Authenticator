@@ -1,17 +1,54 @@
 {
   ConstraintSets: {
     start: {
-      textColumn: {
-        top: ['parent', 'top', 0],
+      imageArrowBack: {
+        top: ['parent', 'top', 15.5],
+        start: ['parent', 'start', 4],
+        visibility: 'gone',
+      },
+      imageLogo: {
+        top: ['parent', 'top'],
+        start: ['parent', 'start', 12],
+        bottom: ['parent', 'bottom'],
+        visibility: 'visible',
+      },
+      accountColumn: {
+//        width: 'wrap',
+        height: 'wrap',
+        top: ['parent', 'top'],
         start: ['imageLogo', 'end', 8],
-        bottom: ['parent', 'bottom', 0],
-      }
+        bottom: ['parent', 'bottom'],
+        end: ['passCodeColumn', 'start'],
+      },
+      passCodeColumn: {
+        top: ['parent', 'top'],
+        bottom: ['parent', 'bottom'],
+        end: ['parent', 'end', 16],
+      },
     },
     end: {
-      textColumn: {
-        top: ['imageArrowBack', 'top', 0],
+      imageArrowBack: {
+        top: ['parent', 'top', 15.5],
+        start: ['parent', 'start', 4],
+        visibility: 'visible',
+      },
+      imageLogo: {
+        top: ['parent', 'top'],
+        start: ['parent', 'start', 12],
+        bottom: ['parent', 'bottom'],
+        visibility: 'gone',
+      },
+      accountColumn: {
+        width: 'wrap',
+        height: 'wrap',
+        top: ['imageArrowBack', 'top'],
         start: ['imageArrowBack', 'end', 8],
-        bottom: ['imageArrowBack', 'bottom', 0],
+        bottom: ['imageArrowBack', 'bottom'],
+      },
+      passCodeColumn: {
+        top: ['parent', 'top'],
+        bottom: ['parent', 'bottom'],
+        end: ['parent', 'end', 16],
       }
     }
   },
@@ -19,14 +56,14 @@
     default: {
       from: 'start',
       to: 'end',
-      pathMotionArc: 'startVertical',
+      pathMotionArc: 'startHorizontal',
       KeyFrames: {
         KeyAttributes: [
           {
-            target: ['textColumn'],
-            frames: [0, 100],
-            scaleX: [1, 0.5],
-            scaleY: [1, 0.5]
+            target: ['imageArrowBack', 'imageLogo', 'accountColumn', 'passCodeColumn'],
+            frames: [50],
+            scaleX: 1,
+            scaleY: 1
           }
         ]
       }

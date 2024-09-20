@@ -4,8 +4,8 @@ import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import dagger.hilt.android.AndroidEntryPoint
 import idv.hsu.authenticator.databinding.ActivityMainBinding
-import idv.hsu.authenticator.feature.splash.SplashFragment
-import idv.hsu.authenticator.feature.totplist.TotpFragment
+import idv.hsu.authenticator.presentation.screen.splash.SplashFragment
+import idv.hsu.authenticator.presentation.screen.totplist.TotpFragment
 
 @AndroidEntryPoint
 class MainActivity : AppCompatActivity() {
