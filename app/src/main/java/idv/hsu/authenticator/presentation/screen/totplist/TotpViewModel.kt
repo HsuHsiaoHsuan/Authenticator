@@ -12,6 +12,7 @@ import javax.inject.Inject
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
 
 @HiltViewModel
@@ -26,19 +27,14 @@ class TotpViewModel @Inject constructor(
     val remainingTime: StateFlow<Long> = _remainingTime
 
     init {
-        viewModelScope.launch {
-            while (true) {
-                val timeRemaining = 30L - ((System.currentTimeMillis() / 1000) % 30L)
-                _remainingTime.value = timeRemaining
-                delay(1000L)
-            }
-        }
+        startCountdownTimer()
+        observeAccounts()
     }
 
     override suspend fun handleIntent(intent: TotpIntent) {
         when (intent) {
-            is TotpIntent.LoadTOTPAccounts -> {
-                setUiState(TotpUiState.ShowTOTPAccounts(dbGetAllAccountsUseCase()))
+            is TotpIntent.RefreshTOTPAccounts -> {
+                refreshAccounts()
             }
             is TotpIntent.SaveTOTPAccount -> {
                 setUiState(TotpUiState.Loading)
@@ -57,10 +53,35 @@ class TotpViewModel @Inject constructor(
 
         }
     }
+
+    private fun startCountdownTimer() {
+        viewModelScope.launch {
+            while (true) {
+                val timeRemaining = 30L - ((System.currentTimeMillis() / 1000) % 30L)
+                _remainingTime.value = timeRemaining
+                delay(1000L)
+            }
+        }
+    }
+
+    private fun observeAccounts() {
+        viewModelScope.launch {
+            dbGetAllAccountsUseCase().collect { accountList ->
+                setUiState(TotpUiState.ShowTOTPAccounts(accountList))
+            }
+        }
+    }
+
+    private fun refreshAccounts() {
+        viewModelScope.launch {
+            val latestAccounts = dbGetAllAccountsUseCase().first()
+            setUiState(TotpUiState.ShowTOTPAccounts(latestAccounts))
+        }
+    }
 }
 
 sealed class TotpIntent {
-    data object LoadTOTPAccounts : TotpIntent()
+    data object RefreshTOTPAccounts : TotpIntent()
     data class SaveTOTPAccount(val totpData: String) : TotpIntent()
     data class DeleteTOTPAccount(val accountName: String) : TotpIntent()
 }

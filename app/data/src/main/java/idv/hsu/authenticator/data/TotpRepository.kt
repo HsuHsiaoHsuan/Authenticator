@@ -2,6 +2,7 @@ package idv.hsu.authenticator.data
 
 import idv.hsu.authenticator.data.local.TOTPAccount
 import idv.hsu.authenticator.data.local.TOTPAccountDao
+import kotlinx.coroutines.flow.Flow
 import javax.inject.Inject
 
 class TotpRepository @Inject constructor(
@@ -16,7 +17,7 @@ class TotpRepository @Inject constructor(
         return totpAccountDao.getAccountByName(accountName)
     }
 
-    suspend fun getAllAccounts(): List<TOTPAccount> {
+    fun getAllAccounts(): Flow<List<TOTPAccount>> {
         return totpAccountDao.getAllAccounts()
     }
 

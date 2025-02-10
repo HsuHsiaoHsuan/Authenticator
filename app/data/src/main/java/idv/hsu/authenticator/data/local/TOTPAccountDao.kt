@@ -4,6 +4,7 @@ import androidx.room.Dao
 import androidx.room.Insert
 import androidx.room.OnConflictStrategy
 import androidx.room.Query
+import kotlinx.coroutines.flow.Flow
 
 @Dao
 interface TOTPAccountDao {
@@ -14,7 +15,7 @@ interface TOTPAccountDao {
     suspend fun getAccountByName(accountName: String): TOTPAccount?
 
     @Query("SELECT * FROM totp_accounts")
-    suspend fun getAllAccounts(): List<TOTPAccount>
+    fun getAllAccounts(): Flow<List<TOTPAccount>>
 
     @Query("DELETE FROM totp_accounts WHERE accountName = :accountName")
     suspend fun deleteAccountByName(accountName: String): Int

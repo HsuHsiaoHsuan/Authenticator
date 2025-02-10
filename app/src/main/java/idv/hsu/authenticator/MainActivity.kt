@@ -1,27 +1,79 @@
 package idv.hsu.authenticator
 
+import android.content.res.Configuration
 import android.os.Bundle
+import android.widget.Toast
+import androidx.activity.compose.setContent
+import androidx.activity.enableEdgeToEdge
+import androidx.activity.result.ActivityResultLauncher
+import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
+import androidx.compose.material3.Surface
+import androidx.compose.runtime.Composable
+import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.dp
+import com.journeyapps.barcodescanner.ScanContract
+import com.journeyapps.barcodescanner.ScanOptions
 import dagger.hilt.android.AndroidEntryPoint
-import idv.hsu.authenticator.databinding.ActivityMainBinding
-import idv.hsu.authenticator.presentation.screen.splash.SplashFragment
-import idv.hsu.authenticator.presentation.screen.totplist.TotpFragment
+import idv.hsu.authenticator.presentation.screen.totplist.TotpScreen
+import idv.hsu.authenticator.ui.MainIntent
+import idv.hsu.authenticator.ui.MainViewModel
+import idv.hsu.authenticator.ui.theme.AppTheme
+import timber.log.Timber
 
 @AndroidEntryPoint
 class MainActivity : AppCompatActivity() {
 
-    private lateinit var binding: ActivityMainBinding
+    private val viewModel: MainViewModel by viewModels()
+
+    private val qrCodeLauncher: ActivityResultLauncher<ScanOptions> = registerForActivityResult(
+        ScanContract()
+    ) { result ->
+        if (result.contents == null) {
+            Toast.makeText(this, "Cancelled", Toast.LENGTH_LONG).show();
+        } else {
+            handleQRCodeData(result.contents)
+            Toast.makeText(this, "Scanned: " + result.contents, Toast.LENGTH_LONG)
+                .show();
+        }
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-
-        binding = ActivityMainBinding.inflate(layoutInflater)
-        setContentView(binding.root)
-
-        if (savedInstanceState == null) {
-            supportFragmentManager.beginTransaction()
-                .replace(R.id.container, TotpFragment.newInstance())
-                .commitNow()
+        enableEdgeToEdge()
+        setContent {
+            AppTheme {
+                Surface (tonalElevation = 5.dp) {
+                    TotpScreen(
+                        onFabClick = {
+                            qrCodeLauncher.launch(ScanOptions())
+                        }
+                    )
+                }
+            }
         }
+    }
+
+    private fun handleQRCodeData(qrCodeData: String) {
+        Timber.d("QR Code Data: $qrCodeData")
+        viewModel.onIntent(MainIntent.SaveTotpAccount(qrCodeData))
+    }
+}
+
+@Preview(
+    uiMode = Configuration.UI_MODE_NIGHT_YES,
+    name = "DefaultPreviewDark"
+)
+@Preview(
+    uiMode = Configuration.UI_MODE_NIGHT_NO,
+    name = "DefaultPreviewLight"
+)
+@Composable
+fun MainPreview() {
+    AppTheme {
+        TotpScreen(
+            onFabClick = {
+            }
+        )
     }
 }

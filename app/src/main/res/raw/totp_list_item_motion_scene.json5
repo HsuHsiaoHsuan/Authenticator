@@ -13,7 +13,7 @@
         visibility: 'visible',
       },
       accountColumn: {
-//        width: 'wrap',
+        width: 'spread',
         height: 'wrap',
         top: ['parent', 'top'],
         start: ['imageLogo', 'end', 8],
@@ -39,11 +39,12 @@
         visibility: 'gone',
       },
       accountColumn: {
-        width: 'wrap',
+        width: 'spread',
         height: 'wrap',
         top: ['imageArrowBack', 'top'],
         start: ['imageArrowBack', 'end', 8],
         bottom: ['imageArrowBack', 'bottom'],
+        end: ['passCodeColumn', 'start']
       },
       passCodeColumn: {
         top: ['parent', 'top'],
