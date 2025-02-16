@@ -1,8 +1,7 @@
-package idv.hsu.authenticator.presentation.screen.qrcodereader
+package idv.hsu.authenticator.presentation.viewmodel
 
 import android.net.Uri
 import dagger.hilt.android.lifecycle.HiltViewModel
-import idv.hsu.authenticator.presentation.widget.MVIViewModel
 import idv.hsu.authenticator.data.local.TOTPAccount
 import idv.hsu.authenticator.domain.DbDeleteAccountUseCase
 import idv.hsu.authenticator.domain.DbGetAccountUseCase

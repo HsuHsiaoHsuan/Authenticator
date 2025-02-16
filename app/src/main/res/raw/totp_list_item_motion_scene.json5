@@ -21,6 +21,7 @@
         end: ['passCodeColumn', 'start'],
       },
       passCodeColumn: {
+        height: 'spread',
         top: ['parent', 'top'],
         bottom: ['parent', 'bottom'],
         end: ['parent', 'end', 16],
@@ -28,8 +29,9 @@
     },
     end: {
       imageArrowBack: {
-        top: ['parent', 'top', 15.5],
+        top: ['accountColumn', 'top'],
         start: ['parent', 'start', 4],
+        bottom: ['accountColumn', 'bottom'],
         visibility: 'visible',
       },
       imageLogo: {
@@ -41,9 +43,8 @@
       accountColumn: {
         width: 'spread',
         height: 'wrap',
-        top: ['imageArrowBack', 'top'],
+        top: ['parent', 'top', 8],
         start: ['imageArrowBack', 'end', 8],
-        bottom: ['imageArrowBack', 'bottom'],
         end: ['passCodeColumn', 'start']
       },
       passCodeColumn: {

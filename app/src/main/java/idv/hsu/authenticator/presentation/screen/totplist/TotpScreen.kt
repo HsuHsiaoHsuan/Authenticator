@@ -1,12 +1,15 @@
 package idv.hsu.authenticator.presentation.screen.totplist
 
+import android.widget.Toast
 import androidx.compose.animation.core.animateDp
 import androidx.compose.animation.core.updateTransition
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.WindowInsets
@@ -22,11 +25,13 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
+import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Card
+import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Icon
-import androidx.compose.material3.LinearProgressIndicator
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.Text
@@ -39,13 +44,13 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.StrokeCap
+import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.layout.layoutId
+import androidx.compose.ui.platform.LocalClipboardManager
 import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.text.AnnotatedString
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
@@ -62,6 +67,16 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import idv.hsu.authenticator.R
 import idv.hsu.authenticator.data.entities.TotpDataItem
 import idv.hsu.authenticator.presentation.utils.generateTOTP
+import idv.hsu.authenticator.presentation.viewmodel.TotpUiState
+import idv.hsu.authenticator.presentation.viewmodel.TotpViewModel
+import idv.hsu.authenticator.presentation.widget.PasscodeCountdownProgress
+import idv.hsu.authenticator.ui.theme.accountNameColor
+import idv.hsu.authenticator.ui.theme.accountTypeColor
+import idv.hsu.authenticator.ui.theme.colorBlack
+import idv.hsu.authenticator.ui.theme.colorNV100
+import idv.hsu.authenticator.ui.theme.colorNV800
+import idv.hsu.authenticator.ui.theme.colorNV900
+import idv.hsu.authenticator.ui.theme.colorP400
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -110,7 +125,7 @@ fun TotpScreen(
                         start.linkTo(parent.start)
                         end.linkTo(parent.end)
                         bottom.linkTo(parent.bottom)
-                        height = Dimension.fillToConstraints
+//                        height = Dimension.fillToConstraints
                     }
                 )
             }
@@ -138,13 +153,21 @@ fun TotpScreen(
 
 @Composable
 fun TotpList(items: List<TotpDataItem>, modifier: Modifier = Modifier) {
+    var expandedItemId by remember { mutableStateOf<String?>(null) }
+
     LazyColumn(
         modifier = modifier
             .fillMaxSize()
             .windowInsetsPadding(WindowInsets.systemBars)
     ) {
         items(items, key = { it.id }) { item ->
-            TotpListItem(item = item)
+            TotpListItem(
+                item = item,
+                isShowingPasscode = (expandedItemId == item.id.toString()),
+                onPasscodeClick = {
+                    expandedItemId = if (expandedItemId == item.id.toString()) null else item.id.toString()
+                }
+            )
         }
 
         item {
@@ -155,8 +178,12 @@ fun TotpList(items: List<TotpDataItem>, modifier: Modifier = Modifier) {
 
 @OptIn(ExperimentalMotionApi::class)
 @Composable
-fun TotpListItem(item: TotpDataItem) {
-    var isShowingPasscode by remember { mutableStateOf(false) }
+fun TotpListItem(
+    item: TotpDataItem,
+    isShowingPasscode: Boolean,
+    onPasscodeClick: () -> Unit
+) {
+//    var isShowingPasscode by remember { mutableStateOf(false) }
     val transition =
         updateTransition(targetState = isShowingPasscode, label = "Passcode Transition")
     val sizeOfIssuer by transition.animateDp(
@@ -181,16 +208,19 @@ fun TotpListItem(item: TotpDataItem) {
     Card(
         modifier = Modifier
             .fillMaxWidth()
-            .height(84.dp)
-            .padding(8.dp),
+            .height(100.dp)
+            .padding(start = 20.dp, end = 20.dp, top = 8.dp, bottom = 8.dp),
         shape = RoundedCornerShape(12.dp),
+        colors = CardDefaults.cardColors(
+            containerColor = MaterialTheme.colorScheme.surface
+        )
     ) {
         MotionLayout(
             motionScene = MotionScene(content = motionScene),
             progress = if (isShowingPasscode) 1f else 0f,
             modifier = Modifier
                 .fillMaxSize()
-                .background(Color.White)
+                .background(MaterialTheme.colorScheme.surface)
         ) {
             if (isShowingPasscode) {
                 Image(
@@ -199,13 +229,14 @@ fun TotpListItem(item: TotpDataItem) {
                     modifier = Modifier
                         .size(16.dp)
                         .layoutId("imageArrowBack")
-                        .clickable { isShowingPasscode = false }
+                        .clickable { onPasscodeClick() },
+                    colorFilter = ColorFilter.tint(if (isSystemInDarkTheme()) MaterialTheme.colorScheme.onSurfaceVariant else colorBlack)
                 )
             }
 
             if (!isShowingPasscode) {
                 Image(
-                    painter = painterResource(id = R.drawable.ic_launcher_foreground),
+                    painter = painterResource(id = item.getIssuerIcon()),
                     contentDescription = null,
                     modifier = Modifier
                         .size(36.dp)
@@ -225,7 +256,7 @@ fun TotpListItem(item: TotpDataItem) {
             PasscodeBlock(
                 item = item,
                 isShowingPasscode = isShowingPasscode,
-                onPasscodeClick = { isShowingPasscode = !isShowingPasscode },
+                onPasscodeClick = { onPasscodeClick() },
                 modifier = Modifier
                     .layoutId("passCodeColumn")
             )
@@ -244,7 +275,12 @@ fun AccountInfoBlock(
         Text(
             text = item.issuer ?: "",
             fontSize = sizeOfIssuer.value.sp,
-            fontWeight = FontWeight(590)
+            fontWeight = FontWeight(590),
+            color = if (isSystemInDarkTheme()) {
+                MaterialTheme.colorScheme.onSurfaceVariant
+            } else {
+                accountTypeColor
+            }
         )
 
         Text(
@@ -253,7 +289,12 @@ fun AccountInfoBlock(
             overflow = TextOverflow.Ellipsis,
             fontSize = sizeOfAccountName.value.sp,
             fontWeight = FontWeight(590),
-            color = colorResource(id = R.color.totp_account)
+            color = if (isSystemInDarkTheme()) {
+                MaterialTheme.colorScheme.onSurfaceVariant
+            } else {
+                accountNameColor
+            },
+            modifier = modifier.padding(end = 20.dp)
         )
     }
 }
@@ -277,23 +318,49 @@ fun PasscodeBlock(
             if (!isShowingPasscode) {
                 OutlinedButton(
                     onClick = { onPasscodeClick() },
-                    border = BorderStroke(1.dp, MaterialTheme.colorScheme.primary),
+                    border = BorderStroke(
+                        1.dp,
+                        if (isSystemInDarkTheme()) MaterialTheme.colorScheme.primary else colorNV900
+                    ),
+                    colors = ButtonDefaults.outlinedButtonColors(
+                        contentColor = if (isSystemInDarkTheme()) {
+                            MaterialTheme.colorScheme.primary
+                        } else {
+                            colorNV900
+                        }
+                    ),
+                    shape = RoundedCornerShape(12.dp),
                     modifier = Modifier
                         .constrainAs(textGetPasscode) {
                             start.linkTo(parent.start)
                             top.linkTo(parent.top)
                             bottom.linkTo(parent.bottom)
                         },
-                    contentPadding = androidx.compose.foundation.layout.PaddingValues(4.dp)
+                    contentPadding = PaddingValues(
+                        start = 12.dp,
+                        top = 10.dp,
+                        end = 12.dp,
+                        bottom = 10.dp
+                    ),
                 ) {
-                    Text(text = "Get Passcode", fontSize = 10.sp)
+                    Text(text = "Get Passcode", fontSize = 14.sp)
+                }
+            }
+
+            val formattedText = item.secret.let {
+                if (it.length >= 4) {
+                    it.substring(0, 3) + "\u0020" + it.substring(3) // 在第3和第4個字中間插入半形空白
+                } else {
+                    it // 長度不足4時，保持原樣
                 }
             }
 
             if (isShowingPasscode) {
                 Text(
-                    text = item.secret,
+                    text = formattedText,
+                    color = if (isSystemInDarkTheme()) MaterialTheme.colorScheme.primary else colorNV800,
                     fontSize = 34.sp,
+                    fontWeight = FontWeight(700),
                     modifier = Modifier
                         .constrainAs(textPasscode) {
                             start.linkTo(parent.start)
@@ -302,9 +369,8 @@ fun PasscodeBlock(
                         }
                 )
 
-                LinearProgressIndicator(
-                    progress = { progress },
-                    color = MaterialTheme.colorScheme.primary,
+                PasscodeCountdownProgress(
+                    progress = progress,
                     modifier = Modifier
                         .constrainAs(progressBar) {
                             start.linkTo(textPasscode.start)
@@ -312,21 +378,27 @@ fun PasscodeBlock(
                             top.linkTo(textPasscode.bottom)
                             width = Dimension.fillToConstraints
                         }
-                        .clip(RoundedCornerShape(16.dp)),
-                    strokeCap = StrokeCap.Round
+                        .padding(top = 4.dp),
+                    trackColor = colorNV100,
+                    indicatorColor = colorP400,
                 )
             }
         }
 
         if (isShowingPasscode) {
-            Image(
-                painter = painterResource(id = R.drawable.ic_copy_24),
-                contentDescription = null,
-                modifier = Modifier
-                    .padding(start = 16.dp)
-                    .size(24.dp)
-                    .clickable { /*onCopyClick()*/ }
-            )
+            val clipboardManager = LocalClipboardManager.current
+            val context = LocalContext.current
+
+            IconButton(onClick = {
+                clipboardManager.setText(AnnotatedString(item.secret))
+                Toast.makeText(context, R.string.passcode_copied, Toast.LENGTH_SHORT).show()
+            }) {
+                Image(
+                    painter = painterResource(id = R.drawable.ic_copy_24),
+                    contentDescription = "Copy Icon",
+                    modifier = Modifier.size(24.dp)
+                )
+            }
         }
     }
 }
@@ -357,6 +429,8 @@ fun TotpListItemPreview() {
             "Secret",
             "Issuer",
             30L
-        )
+        ),
+        isShowingPasscode = true,
+        onPasscodeClick = {}
     )
 }

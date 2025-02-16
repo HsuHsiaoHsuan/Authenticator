@@ -8,16 +8,20 @@ import androidx.activity.enableEdgeToEdge
 import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Surface
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.journeyapps.barcodescanner.ScanContract
 import com.journeyapps.barcodescanner.ScanOptions
 import dagger.hilt.android.AndroidEntryPoint
 import idv.hsu.authenticator.presentation.screen.totplist.TotpScreen
-import idv.hsu.authenticator.ui.MainIntent
-import idv.hsu.authenticator.ui.MainViewModel
+import idv.hsu.authenticator.presentation.viewmodel.MainIntent
+import idv.hsu.authenticator.presentation.viewmodel.MainViewModel
 import idv.hsu.authenticator.ui.theme.AppTheme
 import timber.log.Timber
 
@@ -43,12 +47,18 @@ class MainActivity : AppCompatActivity() {
         enableEdgeToEdge()
         setContent {
             AppTheme {
-                Surface (tonalElevation = 5.dp) {
-                    TotpScreen(
-                        onFabClick = {
-                            qrCodeLauncher.launch(ScanOptions())
-                        }
-                    )
+                Scaffold { _ ->
+                    Surface(
+                        modifier = Modifier.fillMaxSize(),
+                        color = MaterialTheme.colorScheme.background,
+                        tonalElevation = 5.dp
+                    ) {
+                        TotpScreen(
+                            onFabClick = {
+                                qrCodeLauncher.launch(ScanOptions())
+                            }
+                        )
+                    }
                 }
             }
         }
@@ -72,8 +82,7 @@ class MainActivity : AppCompatActivity() {
 fun MainPreview() {
     AppTheme {
         TotpScreen(
-            onFabClick = {
-            }
+            onFabClick = {}
         )
     }
 }

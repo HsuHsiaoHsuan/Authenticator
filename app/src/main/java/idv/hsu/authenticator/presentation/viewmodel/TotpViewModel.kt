@@ -1,8 +1,7 @@
-package idv.hsu.authenticator.presentation.screen.totplist
+package idv.hsu.authenticator.presentation.viewmodel
 
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
-import idv.hsu.authenticator.presentation.widget.MVIViewModel
 import idv.hsu.authenticator.data.local.TOTPAccount
 import idv.hsu.authenticator.domain.DbDeleteAccountUseCase
 import idv.hsu.authenticator.domain.DbGetAllAccountsUseCase

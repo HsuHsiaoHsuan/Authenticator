@@ -15,6 +15,9 @@ import com.journeyapps.barcodescanner.ScanContract
 import com.journeyapps.barcodescanner.ScanOptions
 import dagger.hilt.android.AndroidEntryPoint
 import idv.hsu.authenticator.databinding.FragmentQrCodeReaderBinding
+import idv.hsu.authenticator.presentation.viewmodel.QrCodeReaderIntent
+import idv.hsu.authenticator.presentation.viewmodel.QrCodeReaderUiState
+import idv.hsu.authenticator.presentation.viewmodel.QrCodeReaderViewModel
 import kotlinx.coroutines.launch
 import timber.log.Timber
 

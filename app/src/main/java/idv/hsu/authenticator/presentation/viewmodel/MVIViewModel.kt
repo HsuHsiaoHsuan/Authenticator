@@ -1,4 +1,4 @@
-package idv.hsu.authenticator.presentation.widget
+package idv.hsu.authenticator.presentation.viewmodel
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope

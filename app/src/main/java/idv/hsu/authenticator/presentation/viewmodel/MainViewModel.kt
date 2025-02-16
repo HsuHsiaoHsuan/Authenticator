@@ -1,10 +1,9 @@
-package idv.hsu.authenticator.ui
+package idv.hsu.authenticator.presentation.viewmodel
 
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
 import idv.hsu.authenticator.domain.DbInsertAccountUseCase
 import idv.hsu.authenticator.presentation.utils.convertTotpDataToTOTPAccount
-import idv.hsu.authenticator.presentation.widget.MVIViewModel
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
