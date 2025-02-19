@@ -72,9 +72,8 @@ dependencies {
     ksp(libs.hilt.compiler)
     implementation(libs.circle.imageview)
 
-    val composeBom = platform("androidx.compose:compose-bom:2024.09.00")
-    implementation("androidx.compose:compose-bom:2025.01.01")
-    androidTestImplementation("androidx.compose:compose-bom:2025.01.01")
+    implementation(platform(libs.androidx.compose.bom))
+    androidTestImplementation(platform(libs.androidx.compose.bom))
     implementation(libs.androidx.material)
     implementation(libs.androidx.ui.tooling.preview)
     debugImplementation(libs.androidx.ui.tooling)

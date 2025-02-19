@@ -15,5 +15,6 @@
     <string name="dummy_button">Dummy Button</string>
     <string name="dummy_content">DUMMY\nCONTENT</string>
 
+    <string name="get_passcode">Get Passcode</string>
     <string name="passcode_copied">Passcode copied</string>
 </resources>

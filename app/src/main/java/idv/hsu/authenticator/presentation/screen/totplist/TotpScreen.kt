@@ -8,34 +8,26 @@ import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.isSystemInDarkTheme
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.layout.systemBars
-import androidx.compose.foundation.layout.windowInsetsPadding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Add
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.FloatingActionButton
-import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.Text
-import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -43,13 +35,13 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.layout.layoutId
 import androidx.compose.ui.platform.LocalClipboardManager
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.AnnotatedString
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
@@ -81,7 +73,8 @@ import idv.hsu.authenticator.ui.theme.colorP400
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun TotpScreen(
-    onFabClick: () -> Unit
+    modifier: Modifier = Modifier,
+    onUpdateTopAppBar: (String, @Composable (() -> Unit)?) -> Unit,
 ) {
     val viewModel: TotpViewModel = viewModel<TotpViewModel>()
     val uiState = viewModel.uiStateFlow.collectAsStateWithLifecycle().value
@@ -91,62 +84,42 @@ fun TotpScreen(
 //        viewModel.onIntent(TotpIntent.LoadTOTPAccounts)
 //    }
 
-    ConstraintLayout(
-        modifier = Modifier.fillMaxSize()
+    Column(
+        modifier = modifier
+            .fillMaxSize()
+            .padding(horizontal = 8.dp)
     ) {
-        val (topAppBar, fab, content) = createRefs()
-
-        TopAppBar(
-            title = { Text(text = "Authenticator") },
-            modifier = Modifier.constrainAs(topAppBar) {
-                top.linkTo(parent.top)
-                start.linkTo(parent.start)
-                end.linkTo(parent.end)
-            }
-        )
-
         when (uiState) {
             is TotpUiState.Idle -> Unit
             is TotpUiState.Loading -> Unit
             is TotpUiState.SaveTOTPAccountFailed -> Unit
             is TotpUiState.ShowTOTPAccounts -> {
-                TotpList(
-                    items = uiState.accounts.map { account ->
-                        TotpDataItem(
-                            account.id,
-                            account.accountName,
-                            generateTOTP(account.secret, System.currentTimeMillis() / 1000),
-                            account.issuer,
-                            remainingTime
-                        )
-                    },
-                    modifier = Modifier.constrainAs(content) {
-                        top.linkTo(topAppBar.bottom)
-                        start.linkTo(parent.start)
-                        end.linkTo(parent.end)
-                        bottom.linkTo(parent.bottom)
-//                        height = Dimension.fillToConstraints
+                if (uiState.accounts.isNotEmpty()) {
+                    TotpList(
+                        items = uiState.accounts.map { account ->
+                            TotpDataItem(
+                                account.id,
+                                account.accountName,
+                                generateTOTP(account.secret, System.currentTimeMillis() / 1000),
+                                account.issuer,
+                                remainingTime
+                            )
+                        },
+                        modifier = Modifier.fillMaxSize()
+                    )
+                } else {
+                    Box(
+                        modifier = Modifier.fillMaxSize(),
+                        contentAlignment = Alignment.Center
+                    ) {
+                        Text("No Data", style = MaterialTheme.typography.bodyLarge)
                     }
-                )
+                }
             }
 
             is TotpUiState.SaveTOTPAccountSuccess,
             is TotpUiState.DeleteTOTPAccountFailed,
             is TotpUiState.DeleteTOTPAccountSuccess -> Unit
-        }
-
-        FloatingActionButton(
-            onClick = onFabClick,
-            containerColor = MaterialTheme.colorScheme.tertiaryContainer,
-            contentColor = MaterialTheme.colorScheme.onTertiaryContainer,
-            modifier = Modifier
-                .size(62.dp)
-                .constrainAs(fab) {
-                    end.linkTo(parent.end, margin = 40.dp)
-                    bottom.linkTo(parent.bottom, margin = 45.dp)
-                }
-        ) {
-            Icon(imageVector = Icons.Filled.Add, contentDescription = "Add")
         }
     }
 }
@@ -156,23 +129,22 @@ fun TotpList(items: List<TotpDataItem>, modifier: Modifier = Modifier) {
     var expandedItemId by remember { mutableStateOf<String?>(null) }
 
     LazyColumn(
-        modifier = modifier
-            .fillMaxSize()
-            .windowInsetsPadding(WindowInsets.systemBars)
+        modifier = modifier.fillMaxSize()
     ) {
         items(items, key = { it.id }) { item ->
             TotpListItem(
                 item = item,
                 isShowingPasscode = (expandedItemId == item.id.toString()),
                 onPasscodeClick = {
-                    expandedItemId = if (expandedItemId == item.id.toString()) null else item.id.toString()
+                    expandedItemId =
+                        if (expandedItemId == item.id.toString()) null else item.id.toString()
                 }
             )
         }
 
-        item {
-            Spacer(modifier = Modifier.height(45.dp + 62.dp))
-        }
+//        item {
+//            Spacer(modifier = Modifier.height(45.dp + 62.dp))
+//        }
     }
 }
 
@@ -209,7 +181,7 @@ fun TotpListItem(
         modifier = Modifier
             .fillMaxWidth()
             .height(100.dp)
-            .padding(start = 20.dp, end = 20.dp, top = 8.dp, bottom = 8.dp),
+            .padding(8.dp),
         shape = RoundedCornerShape(12.dp),
         colors = CardDefaults.cardColors(
             containerColor = MaterialTheme.colorScheme.surface
@@ -343,7 +315,7 @@ fun PasscodeBlock(
                         bottom = 10.dp
                     ),
                 ) {
-                    Text(text = "Get Passcode", fontSize = 14.sp)
+                    Text(text = stringResource(R.string.get_passcode), fontSize = 14.sp)
                 }
             }
 
