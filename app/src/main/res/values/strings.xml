@@ -15,6 +15,13 @@
     <string name="dummy_button">Dummy Button</string>
     <string name="dummy_content">DUMMY\nCONTENT</string>
 
-    <string name="get_passcode">Get Passcode</string>
-    <string name="passcode_copied">Passcode copied</string>
+    <string name="tutorial_welcome_to_authenticator">Welcome to Authenticator!</string>
+    <string name="tutorial_get_start">Get Start!</string>
+
+    <string name="totp_get_passcode">Get Passcode</string>
+    <string name="totp_passcode_copied">Passcode copied</string>
+    <string name="totp_no_data_title">Get your account protected in 2 minutes!</string>
+    <string name="totp_no_data_subtitle">Two-factor authentication will secure all your accounts</string>
+    <string name="totp_no_data_start_now">Start Now</string>
+    <string name="totp_no_data_how_it_works">How it works</string>
 </resources>

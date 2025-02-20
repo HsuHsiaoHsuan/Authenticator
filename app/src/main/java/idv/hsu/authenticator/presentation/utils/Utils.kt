@@ -3,11 +3,11 @@ package idv.hsu.authenticator.presentation.utils
 import android.net.Uri
 import idv.hsu.authenticator.data.local.TOTPAccount
 import idv.hsu.authenticator.utils.SecretKeyUtils
+import org.apache.commons.codec.binary.Base32
+import timber.log.Timber
 import java.nio.ByteBuffer
 import javax.crypto.Mac
 import javax.crypto.spec.SecretKeySpec
-import org.apache.commons.codec.binary.Base32
-import timber.log.Timber
 
 fun generateTOTPWithTime(secret: String, time: Long, timeStepSeconds: Long = 30): Pair<String, Long> {
     val decryptedSecret = SecretKeyUtils.decryptWithKeystore(secret)
@@ -68,7 +68,7 @@ fun convertTotpDataToTOTPAccount(qrCodeData: String): TOTPAccount? {
         Timber.d("accountName: $accountName")
         Timber.d("secret: $secret")
         Timber.d("issuer: $issuer")
-        if (accountName == null || secret == null) {
+        if (accountName.isEmpty() || secret == null) {
             return null
         }
         return TOTPAccount(
