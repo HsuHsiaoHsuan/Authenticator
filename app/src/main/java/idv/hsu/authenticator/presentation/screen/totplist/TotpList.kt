@@ -8,9 +8,11 @@ import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.isSystemInDarkTheme
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
@@ -58,30 +60,57 @@ import idv.hsu.authenticator.ui.theme.accountNameColor
 import idv.hsu.authenticator.ui.theme.accountTypeColor
 import idv.hsu.authenticator.ui.theme.colorBlack
 import idv.hsu.authenticator.ui.theme.colorNV100
+import idv.hsu.authenticator.ui.theme.colorNV500
 import idv.hsu.authenticator.ui.theme.colorNV800
 import idv.hsu.authenticator.ui.theme.colorNV900
 import idv.hsu.authenticator.ui.theme.colorP400
 
 @Composable
-fun TotpList(items: List<TotpDataItem>, modifier: Modifier = Modifier) {
+fun TotpList(data: Map<String, List<TotpDataItem>>, modifier: Modifier = Modifier) {
     var expandedItemId by remember { mutableStateOf<String?>(null) }
 
     LazyColumn(
-        modifier = modifier.fillMaxSize()
+        verticalArrangement = Arrangement.spacedBy(12.dp),
+        modifier = modifier.padding(horizontal = 20.dp)
     ) {
-        items(items, key = { it.id }) { item ->
-            TotpListItem(
-                item = item,
-                isShowingPasscode = (expandedItemId == item.id.toString()),
-                onPasscodeClick = {
-                    expandedItemId =
-                        if (expandedItemId == item.id.toString()) null else item.id.toString()
-                }
-            )
+        item {
+            Spacer(modifier = Modifier.height(6.dp))
         }
-//        item {
-//            Spacer(modifier = Modifier.height(45.dp + 62.dp))
-//        }
+
+        data.forEach { (issuer, listOfData) ->
+            item(key = issuer) {
+                Text(
+                    text = issuer,
+                    style = MaterialTheme.typography.titleMedium,
+                    fontWeight = FontWeight(400),
+                    fontSize = 16.sp,
+                    color = if (isSystemInDarkTheme()) {
+                        MaterialTheme.colorScheme.onBackground
+                    } else {
+                        colorNV500
+                    },
+                    modifier = Modifier.padding(vertical = 8.dp)
+                )
+            }
+//  FIXME: items(listOfData, key = { "${it.issuer}_${it.accountName}" }) { item ->
+            items(listOfData, key = { it.id }) { item ->
+                TotpListItem(
+                    item = item,
+                    isShowingPasscode = (expandedItemId == item.id.toString()),
+                    onPasscodeClick = {
+                        expandedItemId =
+                            if (expandedItemId == item.id.toString()) null else item.id.toString()
+                    }
+                )
+            }
+        }
+
+        item {
+            val fabSize = 56.dp  // 標準 FAB 尺寸
+            val fabMargin = 16.dp  // Material Design 建議的 margin
+            val totalFabHeight = fabSize + (fabMargin * 2)
+            Spacer(modifier = Modifier.height(totalFabHeight))
+        }
     }
 }
 
@@ -116,8 +145,7 @@ fun TotpListItem(
     Card(
         modifier = Modifier
             .fillMaxWidth()
-            .height(100.dp)
-            .padding(8.dp),
+            .height(100.dp),
         shape = RoundedCornerShape(12.dp),
         colors = CardDefaults.cardColors(
             containerColor = MaterialTheme.colorScheme.surface

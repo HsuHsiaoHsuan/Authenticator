@@ -8,6 +8,7 @@ import androidx.activity.enableEdgeToEdge
 import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
+import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
@@ -21,12 +22,14 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
+import androidx.compose.material3.TopAppBarColors
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.journeyapps.barcodescanner.ScanContract
@@ -53,8 +56,6 @@ class MainActivity : AppCompatActivity() {
             Toast.makeText(this, "Cancelled", Toast.LENGTH_LONG).show();
         } else {
             handleQRCodeData(result.contents)
-            Toast.makeText(this, "Scanned: " + result.contents, Toast.LENGTH_LONG)
-                .show();
         }
     }
 
@@ -88,6 +89,13 @@ class MainActivity : AppCompatActivity() {
                                 TopAppBar(
                                     title = { Text(text = topAppBarTitle) },
                                     actions = { topAppBarActions?.invoke() },
+                                    colors = TopAppBarColors(
+                                        containerColor = if (isSystemInDarkTheme()) MaterialTheme.colorScheme.primaryContainer else Color.White,
+                                        scrolledContainerColor = if (isSystemInDarkTheme()) MaterialTheme.colorScheme.primaryContainer else Color.White,
+                                        navigationIconContentColor = if (isSystemInDarkTheme()) MaterialTheme.colorScheme.primaryContainer else Color.White,
+                                        titleContentColor = if (isSystemInDarkTheme()) MaterialTheme.colorScheme.onPrimaryContainer else Color.Black,
+                                        actionIconContentColor = if (isSystemInDarkTheme()) MaterialTheme.colorScheme.onPrimaryContainer else Color.Black
+                                    )
                                 )
                             },
                             floatingActionButton = {
@@ -100,8 +108,11 @@ class MainActivity : AppCompatActivity() {
                                         Icon(imageVector = Icons.Filled.Add, contentDescription = "Add")
                                     }
                                 }
-                            }
+                            },
                         ) { paddingValues ->
+                            Timber.d("paddingValues: $paddingValues")
+                            Timber.d("paddingValues #1-1: ${paddingValues.calculateBottomPadding()}")
+
                             Surface(
                                 modifier = Modifier.fillMaxSize(),
                                 color = MaterialTheme.colorScheme.background,
@@ -115,7 +126,8 @@ class MainActivity : AppCompatActivity() {
                                     },
                                     onEmptyStateChanged = { isEmptyList ->
                                         currentScreen = Screen.Main(isEmptyList)
-                                    }
+                                    },
+                                    onStartNowAction = { qrCodeLauncher.launch(ScanOptions()) }
                                 )
                             }
                         }
@@ -153,7 +165,8 @@ fun MainPreview() {
         TotpScreen(
             modifier = Modifier.padding(fakePaddingValues),
             onUpdateTopAppBar = { _, _ -> },
-            onEmptyStateChanged = { }
+            onEmptyStateChanged = { },
+            onStartNowAction = { }
         )
     }
 }

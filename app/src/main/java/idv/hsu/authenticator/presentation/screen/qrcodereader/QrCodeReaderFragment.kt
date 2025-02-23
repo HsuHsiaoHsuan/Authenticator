@@ -36,8 +36,8 @@ class QrCodeReaderFragment : Fragment() {
             Toast.makeText(requireActivity(), "Cancelled", Toast.LENGTH_LONG).show();
         } else {
             handleQRCodeData(result.contents)
-            Toast.makeText(requireActivity(), "Scanned: " + result.contents, Toast.LENGTH_LONG)
-                .show();
+//            Toast.makeText(requireActivity(), "Scanned: " + result.contents, Toast.LENGTH_LONG)
+//                .show();
         }
     }
 

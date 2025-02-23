@@ -2,17 +2,18 @@ package idv.hsu.authenticator.presentation.viewmodel
 
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
-import idv.hsu.authenticator.data.local.TOTPAccount
+import idv.hsu.authenticator.data.entities.TotpDataItem
 import idv.hsu.authenticator.domain.DbDeleteAccountUseCase
 import idv.hsu.authenticator.domain.DbGetAllAccountsUseCase
 import idv.hsu.authenticator.domain.DbInsertAccountUseCase
 import idv.hsu.authenticator.presentation.utils.convertTotpDataToTOTPAccount
-import javax.inject.Inject
+import idv.hsu.authenticator.presentation.utils.generateTOTP
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
-import kotlinx.coroutines.flow.first
+import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.launch
+import javax.inject.Inject
 
 @HiltViewModel
 class TotpViewModel @Inject constructor(
@@ -23,7 +24,7 @@ class TotpViewModel @Inject constructor(
     initialUi = TotpUiState.Idle
 ) {
     private val _remainingTime = MutableStateFlow(30L)
-    val remainingTime: StateFlow<Long> = _remainingTime
+    private val remainingTime: StateFlow<Long> = _remainingTime
 
     init {
         startCountdownTimer()
@@ -32,9 +33,6 @@ class TotpViewModel @Inject constructor(
 
     override suspend fun handleIntent(intent: TotpIntent) {
         when (intent) {
-            is TotpIntent.RefreshTOTPAccounts -> {
-                refreshAccounts()
-            }
             is TotpIntent.SaveTOTPAccount -> {
                 setUiState(TotpUiState.Loading)
                 val data = convertTotpDataToTOTPAccount(intent.totpData)
@@ -45,6 +43,7 @@ class TotpViewModel @Inject constructor(
                     setUiState(TotpUiState.SaveTOTPAccountSuccess)
                 }
             }
+
             is TotpIntent.DeleteTOTPAccount -> {
                 dbDeleteAccountUseCase(intent.accountName)
                 setUiState(TotpUiState.DeleteTOTPAccountSuccess(intent.accountName))
@@ -58,29 +57,44 @@ class TotpViewModel @Inject constructor(
             while (true) {
                 val timeRemaining = 30L - ((System.currentTimeMillis() / 1000) % 30L)
                 _remainingTime.value = timeRemaining
-                delay(1000L)
+                delay(1_000L)
             }
         }
     }
 
     private fun observeAccounts() {
         viewModelScope.launch {
-            dbGetAllAccountsUseCase().collect { accountList ->
-                setUiState(TotpUiState.ShowTOTPAccounts(accountList))
+            combine(
+                dbGetAllAccountsUseCase(),
+                remainingTime
+            ) { accountList, remainingTime ->
+                val groupedData =
+                    accountList.sortedWith(compareBy({ it.issuer ?: "" }, { it.accountName }))
+                        .map { account ->
+                            TotpDataItem(
+                                id = account.id,
+                                accountName = account.accountName,
+                                secret = generateTOTP(
+                                    account.secret,
+                                    System.currentTimeMillis() / 1000
+                                ),
+                                issuer = account.issuer,
+                                remainingTime = remainingTime
+                            )
+                        }.groupBy { it.issuer ?: "Others" }
+                accountList to groupedData
+            }.collect { (accountList, groupedData) ->
+                if (accountList.isNotEmpty()) {
+                    setUiState(TotpUiState.ShowTOTPAccounts(groupedData))
+                } else {
+                    setUiState(TotpUiState.NoTotpAccount)
+                }
             }
-        }
-    }
-
-    private fun refreshAccounts() {
-        viewModelScope.launch {
-            val latestAccounts = dbGetAllAccountsUseCase().first()
-            setUiState(TotpUiState.ShowTOTPAccounts(latestAccounts))
         }
     }
 }
 
 sealed class TotpIntent {
-    data object RefreshTOTPAccounts : TotpIntent()
     data class SaveTOTPAccount(val totpData: String) : TotpIntent()
     data class DeleteTOTPAccount(val accountName: String) : TotpIntent()
 }
@@ -88,8 +102,9 @@ sealed class TotpIntent {
 sealed class TotpUiState {
     data object Idle : TotpUiState()
     data object Loading : TotpUiState()
-    data class ShowTOTPAccounts(val accounts: List<TOTPAccount>) : TotpUiState()
-    data object SaveTOTPAccountSuccess: TotpUiState()
+    data class ShowTOTPAccounts(val accountsGroup: Map<String, List<TotpDataItem>>) : TotpUiState()
+    data object NoTotpAccount : TotpUiState()
+    data object SaveTOTPAccountSuccess : TotpUiState()
     data class SaveTOTPAccountFailed(val message: String) : TotpUiState()
     data class DeleteTOTPAccountSuccess(val accountName: String) : TotpUiState()
     data class DeleteTOTPAccountFailed(val accountName: String) : TotpUiState()
