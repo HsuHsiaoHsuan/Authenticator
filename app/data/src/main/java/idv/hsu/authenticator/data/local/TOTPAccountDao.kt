@@ -8,7 +8,7 @@ import kotlinx.coroutines.flow.Flow
 
 @Dao
 interface TOTPAccountDao {
-    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    @Insert(onConflict = OnConflictStrategy.IGNORE)
     suspend fun insertAccount(account: TOTPAccount): Long
 
     @Query("SELECT * FROM totp_accounts WHERE accountName = :accountName")

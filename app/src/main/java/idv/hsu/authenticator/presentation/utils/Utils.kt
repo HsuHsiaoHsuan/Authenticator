@@ -64,7 +64,7 @@ fun convertTotpDataToTOTPAccount(qrCodeData: String): TOTPAccount? {
         val uri = Uri.parse(qrCodeData)
         val accountName = uri.path?.substring(1)?.split(":")?.get(1) ?: ""
         val secret = uri.getQueryParameter("secret")
-        val issuer = uri.getQueryParameter("issuer")
+        val issuer = uri.getQueryParameter("issuer") ?: ""
         Timber.d("accountName: $accountName")
         Timber.d("secret: $secret")
         Timber.d("issuer: $issuer")

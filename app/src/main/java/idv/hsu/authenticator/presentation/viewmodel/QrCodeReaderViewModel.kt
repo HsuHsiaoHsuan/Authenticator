@@ -28,7 +28,7 @@ class QrCodeReaderViewModel @Inject constructor(
                     val uri = Uri.parse(qrCodeData)
                     val accountName = uri.path?.substring(1) // 去掉前面的 "/"
                     val secret = uri.getQueryParameter("secret")
-                    val issuer = uri.getQueryParameter("issuer")
+                    val issuer = uri.getQueryParameter("issuer") ?: ""
                     Timber.d("insert accountName: $accountName")
                     Timber.d("insert secret: $secret")
                     Timber.d("insert issuer: $issuer")

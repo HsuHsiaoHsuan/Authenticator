@@ -69,10 +69,9 @@ class TotpViewModel @Inject constructor(
                 remainingTime
             ) { accountList, remainingTime ->
                 val groupedData =
-                    accountList.sortedWith(compareBy({ it.issuer ?: "" }, { it.accountName }))
+                    accountList.sortedWith(compareBy({ it.issuer }, { it.accountName }))
                         .map { account ->
                             TotpDataItem(
-                                id = account.id,
                                 accountName = account.accountName,
                                 secret = generateTOTP(
                                     account.secret,

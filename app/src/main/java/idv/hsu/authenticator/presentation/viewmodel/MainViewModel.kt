@@ -5,6 +5,7 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import idv.hsu.authenticator.domain.DbInsertAccountUseCase
 import idv.hsu.authenticator.presentation.utils.convertTotpDataToTOTPAccount
 import kotlinx.coroutines.launch
+import timber.log.Timber
 import javax.inject.Inject
 
 @HiltViewModel
@@ -25,8 +26,12 @@ class MainViewModel @Inject constructor(
         if (data == null) {
             setUiState(MainUiState.SaveTotpAccountFailed("Invalid QR Code"))
         } else {
-            dbInsertAccountUseCase(data)
-            setUiState(MainUiState.SaveTotpAccountSuccess)
+            val result = dbInsertAccountUseCase(data)
+            if (result < 1) {
+                setUiState(MainUiState.SaveTotpAccountFailed("Duplicated."))
+            } else {
+                setUiState(MainUiState.SaveTotpAccountSuccess)
+            }
         }
     }
 }

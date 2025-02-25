@@ -110,9 +110,6 @@ class MainActivity : AppCompatActivity() {
                                 }
                             },
                         ) { paddingValues ->
-                            Timber.d("paddingValues: $paddingValues")
-                            Timber.d("paddingValues #1-1: ${paddingValues.calculateBottomPadding()}")
-
                             Surface(
                                 modifier = Modifier.fillMaxSize(),
                                 color = MaterialTheme.colorScheme.background,

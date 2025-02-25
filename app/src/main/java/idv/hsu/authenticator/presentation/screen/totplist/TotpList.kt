@@ -32,6 +32,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -67,8 +68,6 @@ import idv.hsu.authenticator.ui.theme.colorP400
 
 @Composable
 fun TotpList(data: Map<String, List<TotpDataItem>>, modifier: Modifier = Modifier) {
-    var expandedItemId by remember { mutableStateOf<String?>(null) }
-
     LazyColumn(
         verticalArrangement = Arrangement.spacedBy(12.dp),
         modifier = modifier.padding(horizontal = 20.dp)
@@ -93,15 +92,8 @@ fun TotpList(data: Map<String, List<TotpDataItem>>, modifier: Modifier = Modifie
                 )
             }
 //  FIXME: items(listOfData, key = { "${it.issuer}_${it.accountName}" }) { item ->
-            items(listOfData, key = { it.id }) { item ->
-                TotpListItem(
-                    item = item,
-                    isShowingPasscode = (expandedItemId == item.id.toString()),
-                    onPasscodeClick = {
-                        expandedItemId =
-                            if (expandedItemId == item.id.toString()) null else item.id.toString()
-                    }
-                )
+            items(listOfData, key = { "${it.issuer}_${it.accountName}_${it.secret}" }) { item ->
+                TotpListItem(item = item)
             }
         }
 
@@ -117,12 +109,16 @@ fun TotpList(data: Map<String, List<TotpDataItem>>, modifier: Modifier = Modifie
 @OptIn(ExperimentalMotionApi::class)
 @Composable
 fun TotpListItem(
-    item: TotpDataItem,
-    isShowingPasscode: Boolean,
-    onPasscodeClick: () -> Unit
+    item: TotpDataItem
 ) {
+    var isExpanded by rememberSaveable { mutableStateOf(false) }
+
+    fun toggleExpansion() {
+        isExpanded = !isExpanded
+    }
+
     val transition =
-        updateTransition(targetState = isShowingPasscode, label = "Passcode Transition")
+        updateTransition(targetState = isExpanded, label = "Passcode Transition")
     val sizeOfIssuer by transition.animateDp(
         label = "Issuer Text Size",
     ) { state ->
@@ -153,26 +149,26 @@ fun TotpListItem(
     ) {
         MotionLayout(
             motionScene = MotionScene(content = motionScene),
-            progress = if (isShowingPasscode) 1f else 0f,
+            progress = if (isExpanded) 1f else 0f,
             modifier = Modifier
                 .fillMaxSize()
                 .background(MaterialTheme.colorScheme.surface)
         ) {
-            if (isShowingPasscode) {
+            if (isExpanded) {
                 Image(
                     painter = painterResource(id = R.drawable.ic_arrow_back_16),
                     contentDescription = null,
                     modifier = Modifier
                         .size(16.dp)
                         .layoutId("imageArrowBack")
-                        .clickable { onPasscodeClick() },
+                        .clickable { toggleExpansion() },
                     colorFilter = ColorFilter.tint(if (isSystemInDarkTheme()) MaterialTheme.colorScheme.onSurfaceVariant else colorBlack)
                 )
             }
 
-            if (!isShowingPasscode) {
+            if (!isExpanded) {
                 Image(
-                    painter = painterResource(id = item.getIssuerIcon()),
+                    painter = painterResource(id = item.getIssuerIcon(isSystemInDarkTheme())),
                     contentDescription = null,
                     modifier = Modifier
                         .size(36.dp)
@@ -191,8 +187,8 @@ fun TotpListItem(
 
             PasscodeBlock(
                 item = item,
-                isShowingPasscode = isShowingPasscode,
-                onPasscodeClick = { onPasscodeClick() },
+                isShowingPasscode = isExpanded,
+                onGetPasscodeClick = { toggleExpansion() },
                 modifier = Modifier
                     .layoutId("passCodeColumn")
             )
@@ -241,7 +237,7 @@ fun AccountInfoBlock(
 fun PasscodeBlock(
     item: TotpDataItem,
     isShowingPasscode: Boolean,
-    onPasscodeClick: () -> Unit,
+    onGetPasscodeClick: () -> Unit,
     modifier: Modifier = Modifier
 ) {
     val progress = item.remainingTime / 30f
@@ -255,7 +251,7 @@ fun PasscodeBlock(
 
             if (!isShowingPasscode) {
                 OutlinedButton(
-                    onClick = { onPasscodeClick() },
+                    onClick = { onGetPasscodeClick() },
                     border = BorderStroke(
                         1.dp,
                         if (isSystemInDarkTheme()) MaterialTheme.colorScheme.primary else colorNV900

@@ -65,7 +65,7 @@ fun TotpScreen(
             is TotpUiState.NoTotpAccount -> {
                 onEmptyStateChanged(true)
                 ConstraintLayout(
-                    modifier = Modifier
+                    modifier = modifier
                         .fillMaxSize()
                         .background(if (isSystemInDarkTheme()) MaterialTheme.colorScheme.background else Color.White)
                 ) {
@@ -176,34 +176,34 @@ fun TotpScreen(
     }
 }
 
-@Preview
-@Composable
-fun PasscodeBlockPreview() {
-    PasscodeBlock(
-        item = TotpDataItem(
-            1,
-            "Account Name",
-            "Secret",
-            "Issuer",
-            30L
-        ),
-        isShowingPasscode = true,
-        onPasscodeClick = {}
-    )
-}
+//@Preview
+//@Composable
+//fun PasscodeBlockPreview() {
+//    PasscodeBlock(
+//        item = TotpDataItem(
+//            1,
+//            "Account Name",
+//            "Secret",
+//            "Issuer",
+//            30L
+//        ),
+//        isShowingPasscode = true,
+//        onGetPasscodeClick = {}
+//    )
+//}
 
-@Preview
-@Composable
-fun TotpListItemPreview() {
-    TotpListItem(
-        item = TotpDataItem(
-            1,
-            "Account Name",
-            "Secret",
-            "Issuer",
-            30L
-        ),
-        isShowingPasscode = true,
-        onPasscodeClick = {}
-    )
-}
+//@Preview
+//@Composable
+//fun TotpListItemPreview() {
+//    TotpListItem(
+//        item = TotpDataItem(
+//            1,
+//            "Account Name",
+//            "Secret",
+//            "Issuer",
+//            30L
+//        ),
+//        isShowingPasscode = true,
+//        onPasscodeClick = {}
+//    )
+//}
