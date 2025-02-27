@@ -3,13 +3,20 @@ package idv.hsu.authenticator
 import android.app.Application
 import android.util.Log
 import dagger.hilt.android.HiltAndroidApp
+import idv.hsu.authenticator.data.local.DataStoreManager
 import idv.hsu.authenticator.utils.SecretKeyUtils
 import timber.log.Timber
+import javax.inject.Inject
 
 @HiltAndroidApp
 class MyApp : Application() {
+    @Inject
+    lateinit var dataStoreManager: DataStoreManager
+
     override fun onCreate() {
         super.onCreate()
+
+        dataStoreManager.init(this)
 
         if (!SecretKeyUtils.isKeyGenerated()) {
             SecretKeyUtils.generateKey()

@@ -38,6 +38,7 @@ dependencies {
 
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.appcompat)
+    implementation(libs.androidx.datastore.preferences)
     implementation(libs.bundles.room)
     ksp(libs.room.compiler)
     implementation(libs.hilt)

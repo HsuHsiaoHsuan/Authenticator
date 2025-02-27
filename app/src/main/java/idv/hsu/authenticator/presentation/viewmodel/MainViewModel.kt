@@ -3,17 +3,37 @@ package idv.hsu.authenticator.presentation.viewmodel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
 import idv.hsu.authenticator.domain.DbInsertAccountUseCase
+import idv.hsu.authenticator.domain.DsGetFirstTimeStatusUseCase
+import idv.hsu.authenticator.domain.DsSetFirstTimeStatusUseCase
 import idv.hsu.authenticator.presentation.utils.convertTotpDataToTOTPAccount
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
-import timber.log.Timber
 import javax.inject.Inject
 
 @HiltViewModel
 class MainViewModel @Inject constructor(
     private val dbInsertAccountUseCase: DbInsertAccountUseCase,
+    private val dsGetFirstTimeStatusUseCase: DsGetFirstTimeStatusUseCase,
+    private val dsSetFirstTimeStatusUseCase: DsSetFirstTimeStatusUseCase,
 ) : MVIViewModel<MainIntent, MainUiState>(
     initialUi = MainUiState.Idle
 ) {
+    private val _isFirstTime = MutableStateFlow<Boolean>(true)
+    val isFirstTime: StateFlow<Boolean> = _isFirstTime.asStateFlow()
+
+    init {
+        viewModelScope.launch {
+            _isFirstTime.value = dsGetFirstTimeStatusUseCase()
+        }
+    }
+
+    suspend fun markFirstTimeDone() {
+        dsSetFirstTimeStatusUseCase()
+        _isFirstTime.value = false
+    }
+
     override suspend fun handleIntent(intent: MainIntent) {
         when (intent) {
             is MainIntent.SaveTotpAccount -> saveTotpAccount(intent.totpData)

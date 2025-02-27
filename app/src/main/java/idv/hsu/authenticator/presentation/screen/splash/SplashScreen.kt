@@ -11,14 +11,27 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.sp
+import androidx.navigation.NavController
+import idv.hsu.authenticator.Screen
 import idv.hsu.authenticator.ui.theme.colorNV900
 import kotlinx.coroutines.delay
 
 @Composable
-fun SplashScreen(onNavigateToNext: () -> Unit) {
+fun SplashScreen(
+    navController: NavController,
+    isFirstTime: Boolean) {
+
     LaunchedEffect(Unit) {
-        delay(10)
-        onNavigateToNext()
+        delay(1_000)
+        if (isFirstTime) {
+            navController.navigate(Screen.Tutorial.route) {
+                popUpTo(Screen.Splash.route) { inclusive = true }
+            }
+        } else {
+            navController.navigate(Screen.Totp.route) {
+                popUpTo(Screen.Splash.route) { inclusive = true }
+            }
+        }
     }
 
     Column(

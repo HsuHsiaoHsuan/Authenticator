@@ -6,7 +6,7 @@ import kotlinx.coroutines.flow.Flow
 import javax.inject.Inject
 
 class DbGetAllAccountsUseCase @Inject constructor(
-    private val totpRepository: TotpRepository
+    private val repository: TotpRepository
 ) {
-    operator fun invoke(): Flow<List<TOTPAccount>> = totpRepository.getAllAccounts()
+    operator fun invoke(): Flow<List<TOTPAccount>> = repository.getAllAccounts()
 }
