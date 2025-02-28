@@ -40,6 +40,7 @@ dependencies {
     implementation(libs.androidx.appcompat)
     implementation(libs.androidx.datastore.preferences)
     implementation(libs.bundles.room)
+    implementation(libs.timber)
     ksp(libs.room.compiler)
     implementation(libs.hilt)
     ksp(libs.hilt.compiler)

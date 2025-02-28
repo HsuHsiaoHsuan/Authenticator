@@ -3,19 +3,19 @@ package idv.hsu.authenticator.presentation.viewmodel
 import android.net.Uri
 import dagger.hilt.android.lifecycle.HiltViewModel
 import idv.hsu.authenticator.data.local.TOTPAccount
-import idv.hsu.authenticator.domain.DbDeleteAccountUseCase
-import idv.hsu.authenticator.domain.DbGetAccountUseCase
-import idv.hsu.authenticator.domain.DbGetAllAccountsUseCase
-import idv.hsu.authenticator.domain.DbInsertAccountUseCase
+import idv.hsu.authenticator.domain.DeleteAccountUseCase
+import idv.hsu.authenticator.domain.GetAccountUseCase
+import idv.hsu.authenticator.domain.GetAllAccountsUseCase
+import idv.hsu.authenticator.domain.InsertAccountUseCase
 import javax.inject.Inject
 import timber.log.Timber
 
 @HiltViewModel
 class QrCodeReaderViewModel @Inject constructor(
-    private val dbDeleteAccountUseCase: DbDeleteAccountUseCase,
-    private val dbGetAccountUseCase: DbGetAccountUseCase,
-    private val dbGetAllAccountsUseCase: DbGetAllAccountsUseCase,
-    private val dbInsertAccountUseCase: DbInsertAccountUseCase
+    private val deleteAccountUseCase: DeleteAccountUseCase,
+    private val getAccountUseCase: GetAccountUseCase,
+    private val getAllAccountsUseCase: GetAllAccountsUseCase,
+    private val insertAccountUseCase: InsertAccountUseCase
 ) : MVIViewModel<QrCodeReaderIntent, QrCodeReaderUiState>(
     initialUi = QrCodeReaderUiState.Idle
 ) {
@@ -34,7 +34,7 @@ class QrCodeReaderViewModel @Inject constructor(
                     Timber.d("insert issuer: $issuer")
 
                     if (secret != null && accountName != null) {
-                        val result = dbInsertAccountUseCase(
+                        val result = insertAccountUseCase(
                             TOTPAccount(
                                 accountName = accountName,
                                 secret = secret,

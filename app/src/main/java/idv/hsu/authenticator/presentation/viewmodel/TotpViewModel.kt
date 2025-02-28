@@ -3,9 +3,9 @@ package idv.hsu.authenticator.presentation.viewmodel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
 import idv.hsu.authenticator.data.entities.TotpDataItem
-import idv.hsu.authenticator.domain.DbDeleteAccountUseCase
-import idv.hsu.authenticator.domain.DbGetAllAccountsUseCase
-import idv.hsu.authenticator.domain.DbInsertAccountUseCase
+import idv.hsu.authenticator.domain.DeleteAccountUseCase
+import idv.hsu.authenticator.domain.GetAllAccountsUseCase
+import idv.hsu.authenticator.domain.InsertAccountUseCase
 import idv.hsu.authenticator.presentation.utils.convertTotpDataToTOTPAccount
 import idv.hsu.authenticator.presentation.utils.generateTOTP
 import kotlinx.coroutines.delay
@@ -17,9 +17,9 @@ import javax.inject.Inject
 
 @HiltViewModel
 class TotpViewModel @Inject constructor(
-    private val dbInsertAccountUseCase: DbInsertAccountUseCase,
-    private val dbGetAllAccountsUseCase: DbGetAllAccountsUseCase,
-    private val dbDeleteAccountUseCase: DbDeleteAccountUseCase,
+    private val insertAccountUseCase: InsertAccountUseCase,
+    private val getAllAccountsUseCase: GetAllAccountsUseCase,
+    private val deleteAccountUseCase: DeleteAccountUseCase,
 ) : MVIViewModel<TotpIntent, TotpUiState>(
     initialUi = TotpUiState.Idle
 ) {
@@ -39,13 +39,13 @@ class TotpViewModel @Inject constructor(
                 if (data == null) {
                     setUiState(TotpUiState.SaveTOTPAccountFailed("Invalid QR Code"))
                 } else {
-                    dbInsertAccountUseCase(data)
+                    insertAccountUseCase(data)
                     setUiState(TotpUiState.SaveTOTPAccountSuccess)
                 }
             }
 
             is TotpIntent.DeleteTOTPAccount -> {
-                dbDeleteAccountUseCase(intent.accountName)
+                deleteAccountUseCase(intent.accountName)
                 setUiState(TotpUiState.DeleteTOTPAccountSuccess(intent.accountName))
             }
 
@@ -65,7 +65,7 @@ class TotpViewModel @Inject constructor(
     private fun observeAccounts() {
         viewModelScope.launch {
             combine(
-                dbGetAllAccountsUseCase(),
+                getAllAccountsUseCase(),
                 remainingTime
             ) { accountList, remainingTime ->
                 val groupedData =

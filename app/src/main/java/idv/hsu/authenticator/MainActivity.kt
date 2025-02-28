@@ -11,11 +11,23 @@ import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
-import androidx.compose.material3.*
-import androidx.compose.runtime.*
+import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.FloatingActionButton
+import androidx.compose.material3.Icon
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Scaffold
+import androidx.compose.material3.Text
+import androidx.compose.material3.TopAppBar
+import androidx.compose.material3.TopAppBarColors
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import androidx.compose.ui.res.stringResource
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
@@ -29,7 +41,6 @@ import idv.hsu.authenticator.presentation.screen.tutorial.TutorialScreen
 import idv.hsu.authenticator.presentation.viewmodel.MainIntent
 import idv.hsu.authenticator.presentation.viewmodel.MainViewModel
 import idv.hsu.authenticator.ui.theme.AppTheme
-import kotlinx.coroutines.launch
 import timber.log.Timber
 
 @AndroidEntryPoint
@@ -59,7 +70,6 @@ class MainActivity : AppCompatActivity() {
                 var needShowFloatActionButton by remember { mutableStateOf(false) }
                 var topAppBarTitle by remember { mutableStateOf<String>("Authenticator") }
                 var topAppBarActions by remember { mutableStateOf<@Composable (() -> Unit)?>(null) }
-                val isFirstTimeOpen by viewModel.isFirstTime.collectAsStateWithLifecycle()
 
                 Scaffold(
                     topBar =
@@ -81,9 +91,9 @@ class MainActivity : AppCompatActivity() {
                     floatingActionButton = {
                         if (needShowFloatActionButton && currentRoute == Screen.Totp.route) {
                             FloatingActionButton(
-                                onClick = { qrCodeLauncher.launch(ScanOptions()) },
                                 containerColor = MaterialTheme.colorScheme.tertiaryContainer,
                                 contentColor = MaterialTheme.colorScheme.onTertiaryContainer,
+                                onClick = { qrCodeLauncher.launch(ScanOptions()) },
                             ) {
                                 Icon(imageVector = Icons.Filled.Add, contentDescription = "Add")
                             }
@@ -92,22 +102,20 @@ class MainActivity : AppCompatActivity() {
                 ) { paddingValues ->
                     NavHost(navController = navController, startDestination = Screen.Splash.route) {
                         composable(Screen.Splash.route) {
-                            SplashScreen(navController = navController, isFirstTime = isFirstTimeOpen)
+                            SplashScreen(navController = navController)
                         }
                         composable(Screen.Tutorial.route) {
+                            topAppBarTitle = stringResource(R.string.screen_tutorial)
                             TutorialScreen(
                                 modifier = Modifier.padding(paddingValues),
-                                navController = navController,
-                                onNavigateToNext = {
-                                    scope.launch {
-                                        viewModel.markFirstTimeDone()
-                                    }
-                                })
+                                navController = navController
+                            )
                         }
                         composable(Screen.Totp.route) {
+                            topAppBarTitle = stringResource(R.string.screen_totp)
                             TotpScreen(
                                 modifier = Modifier.padding(paddingValues),
-                                onUpdateTopAppBar = { title, actions -> },
+                                onUpdateTopAppActions = { actions -> },
                                 needShowFloatActionButton = { value ->
                                     needShowFloatActionButton = value
                                 },
@@ -128,7 +136,7 @@ class MainActivity : AppCompatActivity() {
 }
 
 sealed class Screen(val route: String) {
-    object Splash : Screen("splash")
-    object Tutorial : Screen("tutorial")
-    object Totp : Screen("totp")
+    data object Splash : Screen("splash")
+    data object Tutorial : Screen("tutorial")
+    data object Totp : Screen("totp")
 }

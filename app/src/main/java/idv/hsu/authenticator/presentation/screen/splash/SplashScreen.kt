@@ -11,19 +11,25 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.sp
+import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavController
 import idv.hsu.authenticator.Screen
+import idv.hsu.authenticator.presentation.viewmodel.FirstTimeOpenViewModel
 import idv.hsu.authenticator.ui.theme.colorNV900
 import kotlinx.coroutines.delay
 
 @Composable
 fun SplashScreen(
     navController: NavController,
-    isFirstTime: Boolean) {
+    viewModel: FirstTimeOpenViewModel = hiltViewModel()
+) {
+
+    val isFirstTime = viewModel.isFirstTime.collectAsStateWithLifecycle()
 
     LaunchedEffect(Unit) {
         delay(1_000)
-        if (isFirstTime) {
+        if (isFirstTime.value) {
             navController.navigate(Screen.Tutorial.route) {
                 popUpTo(Screen.Splash.route) { inclusive = true }
             }

@@ -6,6 +6,13 @@
     <string name="fragment_label_qr_code_reader">QR Code Reader</string>
     <string name="fragment_label_totp_list">TOTP</string>
 
+    <string name="screen_splash">Splash</string>
+    <string name="screen_tutorial">Tutorial</string>
+    <string name="screen_how_it_works">How it works</string>
+    <string name="screen_totp">@string/app_name</string>
+
+    <string name="action_back">Back</string>
+    <string name="action_done">Done</string>
     <string name="action_next">Next</string>
     <string name="action_previous">Previous</string>
     <string name="action_scan">Scan</string>
@@ -17,6 +24,14 @@
 
     <string name="tutorial_welcome_to_authenticator">Welcome to Authenticator!</string>
     <string name="tutorial_get_start">Get Start!</string>
+    <string name="tutorial_page1_title">What is two-factor authentication</string>
+    <string name="tutorial_page1_subtitle">some description of OOOXXX OOOXX XOOOXXXOOOXXX</string>
+    <string name="tutorial_page2_title">How it works?</string>
+    <string name="tutorial_page2_subtitle">some description of OOOXXX OOOXX XOOOXXXOOOXXX</string>
+    <string name="tutorial_page3_title">6 digit passcode to get your account protect.</string>
+    <string name="tutorial_page3_subtitle">some description of OOOXXX OOOXX XOOOXXXOOOXXX</string>
+    <string name="tutorial_page4_title">double confirm, login more safe.</string>
+    <string name="tutorial_page4_subtitle">some description of OOOXXX OOOXX XOOOXXXOOOXXX</string>
 
     <string name="totp_get_passcode">Get Passcode</string>
     <string name="totp_passcode_copied">Passcode copied</string>
