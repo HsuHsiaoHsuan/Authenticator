@@ -7,27 +7,8 @@ import androidx.activity.enableEdgeToEdge
 import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
-import androidx.compose.foundation.isSystemInDarkTheme
-import androidx.compose.foundation.layout.padding
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Add
 import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.FloatingActionButton
-import androidx.compose.material3.Icon
-import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Scaffold
-import androidx.compose.material3.Text
-import androidx.compose.material3.TopAppBar
-import androidx.compose.material3.TopAppBarColors
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
-import androidx.compose.runtime.setValue
-import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.res.stringResource
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
@@ -65,66 +46,65 @@ class MainActivity : AppCompatActivity() {
         setContent {
             AppTheme {
                 val navController = rememberNavController()
-                val currentRoute = navController.currentBackStackEntryAsState().value?.destination?.route
+                val currentRoute =
+                    navController.currentBackStackEntryAsState().value?.destination?.route
                 val scope = rememberCoroutineScope()
-                var needShowFloatActionButton by remember { mutableStateOf(false) }
-                var topAppBarTitle by remember { mutableStateOf<String>("Authenticator") }
-                var topAppBarActions by remember { mutableStateOf<@Composable (() -> Unit)?>(null) }
+//                var needShowFloatActionButton by remember { mutableStateOf(false) }
+//                var topAppBarTitle by remember { mutableStateOf<String>("Authenticator") }
+//                var topAppBarActions by remember { mutableStateOf<@Composable (() -> Unit)?>(null) }
 
-                Scaffold(
-                    topBar =
-                        {
-                            if (currentRoute != Screen.Splash.route) {
-                                TopAppBar(
-                                    title = { Text(text = topAppBarTitle) },
-                                    actions = { topAppBarActions?.invoke() },
-                                    colors = TopAppBarColors(
-                                        containerColor = if (isSystemInDarkTheme()) MaterialTheme.colorScheme.primaryContainer else Color.White,
-                                        scrolledContainerColor = if (isSystemInDarkTheme()) MaterialTheme.colorScheme.primaryContainer else Color.White,
-                                        navigationIconContentColor = if (isSystemInDarkTheme()) MaterialTheme.colorScheme.primaryContainer else Color.White,
-                                        titleContentColor = if (isSystemInDarkTheme()) MaterialTheme.colorScheme.onPrimaryContainer else Color.Black,
-                                        actionIconContentColor = if (isSystemInDarkTheme()) MaterialTheme.colorScheme.onPrimaryContainer else Color.Black
-                                    )
-                                )
-                            }
-                        },
-                    floatingActionButton = {
-                        if (needShowFloatActionButton && currentRoute == Screen.Totp.route) {
-                            FloatingActionButton(
-                                containerColor = MaterialTheme.colorScheme.tertiaryContainer,
-                                contentColor = MaterialTheme.colorScheme.onTertiaryContainer,
-                                onClick = { qrCodeLauncher.launch(ScanOptions()) },
-                            ) {
-                                Icon(imageVector = Icons.Filled.Add, contentDescription = "Add")
-                            }
-                        }
-                    },
-                ) { paddingValues ->
+//                Scaffold(
+//                    topBar = {
+//                        if (currentRoute != Screen.Splash.route) {
+//                            TopAppBar(
+//                                title = { Text(text = topAppBarTitle) },
+//                                actions = { topAppBarActions?.invoke() },
+//                                colors = TopAppBarColors(
+//                                    containerColor = if (isSystemInDarkTheme()) MaterialTheme.colorScheme.primaryContainer else Color.White,
+//                                    scrolledContainerColor = if (isSystemInDarkTheme()) MaterialTheme.colorScheme.primaryContainer else Color.White,
+//                                    navigationIconContentColor = if (isSystemInDarkTheme()) MaterialTheme.colorScheme.primaryContainer else Color.White,
+//                                    titleContentColor = if (isSystemInDarkTheme()) MaterialTheme.colorScheme.onPrimaryContainer else Color.Black,
+//                                    actionIconContentColor = if (isSystemInDarkTheme()) MaterialTheme.colorScheme.onPrimaryContainer else Color.Black
+//                                )
+//                            )
+//                        }
+//                    },
+//                    floatingActionButton = {
+//                        if (needShowFloatActionButton && currentRoute == Screen.Totp.route) {
+//                            FloatingActionButton(
+//                                containerColor = MaterialTheme.colorScheme.tertiaryContainer,
+//                                contentColor = MaterialTheme.colorScheme.onTertiaryContainer,
+//                                onClick = { qrCodeLauncher.launch(ScanOptions()) },
+//                            ) {
+//                                Icon(imageVector = Icons.Filled.Add, contentDescription = "Add")
+//                            }
+//                        }
+//                    },
+//                ) { paddingValues ->
                     NavHost(navController = navController, startDestination = Screen.Splash.route) {
                         composable(Screen.Splash.route) {
                             SplashScreen(navController = navController)
                         }
                         composable(Screen.Tutorial.route) {
-                            topAppBarTitle = stringResource(R.string.screen_tutorial)
+//                            topAppBarTitle = stringResource(R.string.screen_tutorial)
                             TutorialScreen(
-                                modifier = Modifier.padding(paddingValues),
                                 navController = navController
                             )
                         }
                         composable(Screen.Totp.route) {
-                            topAppBarTitle = stringResource(R.string.screen_totp)
+//                            topAppBarTitle = stringResource(R.string.screen_totp)
                             TotpScreen(
-                                modifier = Modifier.padding(paddingValues),
-                                onUpdateTopAppActions = { actions -> },
+                                onUpdateTopAppActions = { actions ->
+//                                    topAppBarActions = actions
+                                },
                                 needShowFloatActionButton = { value ->
-                                    needShowFloatActionButton = value
+//                                    needShowFloatActionButton = value
                                 },
                                 onStartNowAction = { qrCodeLauncher.launch(ScanOptions()) },
                                 navController = navController
                             )
                         }
                     }
-                }
             }
         }
     }

@@ -33,11 +33,12 @@ import idv.hsu.authenticator.ui.theme.colorP300
 
 @Composable
 fun TotpEmptyPage(
+    modifier: Modifier,
     navController: NavController,
     onStartNowAction: () -> Unit
 ) {
     ConstraintLayout(
-        modifier = Modifier
+        modifier = modifier
             .fillMaxSize()
             .background(if (isSystemInDarkTheme()) MaterialTheme.colorScheme.background else Color.White)
     ) {

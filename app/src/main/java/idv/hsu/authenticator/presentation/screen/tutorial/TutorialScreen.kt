@@ -1,17 +1,25 @@
 package idv.hsu.authenticator.presentation.screen.tutorial
 
 
+import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.pager.HorizontalPager
 import androidx.compose.foundation.pager.rememberPagerState
+import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Surface
+import androidx.compose.material3.Text
+import androidx.compose.material3.TopAppBar
+import androidx.compose.material3.TopAppBarColors
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
@@ -22,9 +30,9 @@ import idv.hsu.authenticator.presentation.screen.tutorial.pages.TutorialPage
 import idv.hsu.authenticator.presentation.viewmodel.FirstTimeOpenViewModel
 import kotlinx.coroutines.launch
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun TutorialScreen(
-    modifier: Modifier = Modifier,
     navController: NavController,
     viewModel: FirstTimeOpenViewModel = hiltViewModel()
 ) {
@@ -32,35 +40,50 @@ fun TutorialScreen(
     val pages = createTutorialPages()
     val pagerState = rememberPagerState(pageCount = { pages.size })
 
-    Surface(
-        modifier = modifier,
-        color = MaterialTheme.colorScheme.background,
-        tonalElevation = 5.dp
-    ) {
-        Column(
-            modifier = Modifier.fillMaxSize()
-        ) {
-            HorizontalPager(
-                state = pagerState,
-                modifier = Modifier
-                    .weight(1f)
-                    .fillMaxWidth(),
-                userScrollEnabled = false
-            ) { page ->
-                pages[page].content()
-            }
-
-            TutorialNavigationButtons(
-                pagerState = pagerState,
-                doneButtonAction = {
-                    scope.launch {
-                        viewModel.markFirstTimeDone()
-                    }
-                    navController.navigate(Screen.Totp.route) {
-                        popUpTo(0) { inclusive = true }
-                    }
-                }
+    Scaffold(
+        topBar = {
+            TopAppBar(
+                title = { Text(text = stringResource(R.string.screen_tutorial)) },
+                colors = TopAppBarColors(
+                    containerColor = if (isSystemInDarkTheme()) MaterialTheme.colorScheme.primaryContainer else Color.White,
+                    scrolledContainerColor = if (isSystemInDarkTheme()) MaterialTheme.colorScheme.primaryContainer else Color.White,
+                    navigationIconContentColor = if (isSystemInDarkTheme()) MaterialTheme.colorScheme.primaryContainer else Color.White,
+                    titleContentColor = if (isSystemInDarkTheme()) MaterialTheme.colorScheme.onPrimaryContainer else Color.Black,
+                    actionIconContentColor = if (isSystemInDarkTheme()) MaterialTheme.colorScheme.onPrimaryContainer else Color.Black
+                )
             )
+        },
+    ) { paddingValues ->
+        Surface(
+            modifier = Modifier.padding(paddingValues),
+            color = MaterialTheme.colorScheme.background,
+            tonalElevation = 5.dp
+        ) {
+            Column(
+                modifier = Modifier.fillMaxSize()
+            ) {
+                HorizontalPager(
+                    state = pagerState,
+                    modifier = Modifier
+                        .weight(1f)
+                        .fillMaxWidth(),
+                    userScrollEnabled = false
+                ) { page ->
+                    pages[page].content()
+                }
+
+                TutorialNavigationButtons(
+                    pagerState = pagerState,
+                    doneButtonAction = {
+                        scope.launch {
+                            viewModel.markFirstTimeDone()
+                        }
+                        navController.navigate(Screen.Totp.route) {
+                            popUpTo(0) { inclusive = true }
+                        }
+                    }
+                )
+            }
         }
     }
 }
