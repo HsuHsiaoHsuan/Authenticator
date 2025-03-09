@@ -25,7 +25,8 @@ import androidx.constraintlayout.compose.ConstraintLayout
 import androidx.constraintlayout.compose.Dimension
 import androidx.navigation.NavController
 import idv.hsu.authenticator.R
-import idv.hsu.authenticator.Screen
+import idv.hsu.authenticator.TotpListRoute
+import idv.hsu.authenticator.TutorialRoute
 import idv.hsu.authenticator.ui.theme.colorNV500
 import idv.hsu.authenticator.ui.theme.colorNV700
 import idv.hsu.authenticator.ui.theme.colorNV900
@@ -88,8 +89,8 @@ fun TotpEmptyPage(
                     width = Dimension.fillToConstraints
                 },
             onClick = {
-                navController.navigate(Screen.Tutorial.route){
-                    popUpTo(Screen.Totp.route) { inclusive = true }
+                navController.navigate(TutorialRoute.route){
+                    popUpTo(TotpListRoute.route) { inclusive = true }
                 }
             },
             contentPadding = PaddingValues(vertical = 16.dp),

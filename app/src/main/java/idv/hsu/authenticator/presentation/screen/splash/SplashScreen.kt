@@ -14,7 +14,9 @@ import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavController
-import idv.hsu.authenticator.Screen
+import idv.hsu.authenticator.SplashRoute
+import idv.hsu.authenticator.TotpListRoute
+import idv.hsu.authenticator.TutorialRoute
 import idv.hsu.authenticator.presentation.viewmodel.FirstTimeOpenViewModel
 import idv.hsu.authenticator.ui.theme.colorNV900
 import kotlinx.coroutines.delay
@@ -30,12 +32,12 @@ fun SplashScreen(
     LaunchedEffect(Unit) {
         delay(1_000)
         if (isFirstTime.value) {
-            navController.navigate(Screen.Tutorial.route) {
-                popUpTo(Screen.Splash.route) { inclusive = true }
+            navController.navigate(TutorialRoute.route) {
+                popUpTo(SplashRoute.route) { inclusive = true }
             }
         } else {
-            navController.navigate(Screen.Totp.route) {
-                popUpTo(Screen.Splash.route) { inclusive = true }
+            navController.navigate(TotpListRoute.route) {
+                popUpTo(SplashRoute.route) { inclusive = true }
             }
         }
     }

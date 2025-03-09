@@ -14,7 +14,7 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
-import androidx.compose.material3.TopAppBarColors
+import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
@@ -24,7 +24,7 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import idv.hsu.authenticator.R
-import idv.hsu.authenticator.Screen
+import idv.hsu.authenticator.TotpListRoute
 import idv.hsu.authenticator.presentation.screen.tutorial.components.TutorialNavigationButtons
 import idv.hsu.authenticator.presentation.screen.tutorial.pages.TutorialPage
 import idv.hsu.authenticator.presentation.viewmodel.FirstTimeOpenViewModel
@@ -44,7 +44,7 @@ fun TutorialScreen(
         topBar = {
             TopAppBar(
                 title = { Text(text = stringResource(R.string.screen_tutorial)) },
-                colors = TopAppBarColors(
+                colors = TopAppBarDefaults.topAppBarColors(
                     containerColor = if (isSystemInDarkTheme()) MaterialTheme.colorScheme.primaryContainer else Color.White,
                     scrolledContainerColor = if (isSystemInDarkTheme()) MaterialTheme.colorScheme.primaryContainer else Color.White,
                     navigationIconContentColor = if (isSystemInDarkTheme()) MaterialTheme.colorScheme.primaryContainer else Color.White,
@@ -78,7 +78,7 @@ fun TutorialScreen(
                         scope.launch {
                             viewModel.markFirstTimeDone()
                         }
-                        navController.navigate(Screen.Totp.route) {
+                        navController.navigate(TotpListRoute.route) {
                             popUpTo(0) { inclusive = true }
                         }
                     }
