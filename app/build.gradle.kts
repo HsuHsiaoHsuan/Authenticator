@@ -68,6 +68,8 @@ dependencies {
     implementation(libs.androidx.lifecycle.viewmodel.ktx)
     implementation(libs.androidx.fragment.ktx)
     implementation(libs.bundles.zxing)
+    implementation(libs.bundles.koin)
+    ksp(libs.koin.ksp)
     implementation(libs.timber)
     implementation(libs.hilt)
     ksp(libs.hilt.compiler)
