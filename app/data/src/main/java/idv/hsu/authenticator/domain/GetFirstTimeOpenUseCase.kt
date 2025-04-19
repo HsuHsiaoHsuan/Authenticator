@@ -2,9 +2,10 @@ package idv.hsu.authenticator.domain
 
 import idv.hsu.authenticator.data.DataStorePreferences
 import kotlinx.coroutines.flow.Flow
-import javax.inject.Inject
+import org.koin.core.annotation.Single
 
-class GetFirstTimeOpenUseCase @Inject constructor(
+@Single
+class GetFirstTimeOpenUseCase(
     private val preferences: DataStorePreferences
 ) {
     operator fun invoke(): Flow<Boolean> = preferences.isFirstTimeOpen

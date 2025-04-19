@@ -2,33 +2,27 @@ package idv.hsu.authenticator.data
 
 import android.content.Context
 import androidx.room.Room
-import dagger.Module
-import dagger.Provides
-import dagger.hilt.InstallIn
-import dagger.hilt.android.qualifiers.ApplicationContext
-import dagger.hilt.components.SingletonComponent
 import idv.hsu.authenticator.data.local.TOTPAccountDao
 import idv.hsu.authenticator.data.local.TOTPDatabase
-import javax.inject.Singleton
+import org.koin.core.annotation.ComponentScan
+import org.koin.core.annotation.Module
+import org.koin.core.annotation.Single
 
-@InstallIn(SingletonComponent::class)
 @Module
 class DataModule {
-    @Provides
-    @Singleton
-    fun provideDatabase(@ApplicationContext appContext: Context) : TOTPDatabase {
+    @Single
+    fun provideDatabase(context: Context): TOTPDatabase {
         return Room.databaseBuilder(
-            appContext,
+            context,
             TOTPDatabase::class.java,
             "totp_database"
         ).build()
     }
 
-    @Provides
-    @Singleton
-    fun provideDao(database: TOTPDatabase) = database.totpAccountDao()
+    @Single
+    fun provideDao(database: TOTPDatabase): TOTPAccountDao = database.totpAccountDao()
 
-    @Provides
-    @Singleton
-    fun provideRepository(totpAccountDao: TOTPAccountDao) = TotpRepository(totpAccountDao)
+    @Single
+    fun provideRepository(totpAccountDao: TOTPAccountDao): TotpRepository =
+        TotpRepository(totpAccountDao)
 }

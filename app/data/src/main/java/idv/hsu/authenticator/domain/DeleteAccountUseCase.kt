@@ -1,9 +1,10 @@
 package idv.hsu.authenticator.domain
 
 import idv.hsu.authenticator.data.TotpRepository
-import javax.inject.Inject
+import org.koin.core.annotation.Single
 
-class DeleteAccountUseCase @Inject constructor(
+@Single
+class DeleteAccountUseCase(
     private val repository: TotpRepository
 ) {
     suspend operator fun invoke(accountName: String) = repository.deleteAccountByName(accountName)

@@ -1,7 +1,6 @@
 package idv.hsu.authenticator.presentation.viewmodel
 
 import androidx.lifecycle.viewModelScope
-import dagger.hilt.android.lifecycle.HiltViewModel
 import idv.hsu.authenticator.data.entities.TotpDataItem
 import idv.hsu.authenticator.domain.DeleteAccountUseCase
 import idv.hsu.authenticator.domain.GetAllAccountsUseCase
@@ -13,10 +12,10 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.launch
-import javax.inject.Inject
+import org.koin.android.annotation.KoinViewModel
 
-@HiltViewModel
-class TotpViewModel @Inject constructor(
+@KoinViewModel
+class TotpViewModel (
     private val insertAccountUseCase: InsertAccountUseCase,
     private val getAllAccountsUseCase: GetAllAccountsUseCase,
     private val deleteAccountUseCase: DeleteAccountUseCase,

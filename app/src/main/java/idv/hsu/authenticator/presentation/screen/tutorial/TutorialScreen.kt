@@ -21,7 +21,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
-import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import idv.hsu.authenticator.R
 import idv.hsu.authenticator.TotpListRoute
@@ -29,12 +28,13 @@ import idv.hsu.authenticator.presentation.screen.tutorial.components.TutorialNav
 import idv.hsu.authenticator.presentation.screen.tutorial.pages.TutorialPage
 import idv.hsu.authenticator.presentation.viewmodel.FirstTimeOpenViewModel
 import kotlinx.coroutines.launch
+import org.koin.androidx.compose.koinViewModel
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun TutorialScreen(
     navController: NavController,
-    viewModel: FirstTimeOpenViewModel = hiltViewModel()
+    viewModel: FirstTimeOpenViewModel = koinViewModel()
 ) {
     val scope = rememberCoroutineScope()
     val pages = createTutorialPages()

@@ -1,9 +1,10 @@
 package idv.hsu.authenticator.domain
 
 import idv.hsu.authenticator.data.DataStorePreferences
-import javax.inject.Inject
+import org.koin.core.annotation.Single
 
-class SetFirstTimeOpenUseCase @Inject constructor(
+@Single
+class SetFirstTimeOpenUseCase(
     private val preferences: DataStorePreferences
 ) {
     suspend operator fun invoke(isFirstTime: Boolean) {

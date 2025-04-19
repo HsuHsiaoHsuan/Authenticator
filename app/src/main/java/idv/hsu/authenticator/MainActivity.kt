@@ -12,7 +12,6 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import com.journeyapps.barcodescanner.ScanContract
 import com.journeyapps.barcodescanner.ScanOptions
-import dagger.hilt.android.AndroidEntryPoint
 import idv.hsu.authenticator.presentation.screen.splash.SplashScreen
 import idv.hsu.authenticator.presentation.screen.totplist.TotpListScreen
 import idv.hsu.authenticator.presentation.screen.tutorial.TutorialScreen
@@ -22,7 +21,6 @@ import idv.hsu.authenticator.presentation.viewmodel.MainViewModel
 import idv.hsu.authenticator.ui.theme.AppTheme
 import timber.log.Timber
 
-@AndroidEntryPoint
 class MainActivity : AppCompatActivity() {
 
     private val viewModel: MainViewModel by viewModels()

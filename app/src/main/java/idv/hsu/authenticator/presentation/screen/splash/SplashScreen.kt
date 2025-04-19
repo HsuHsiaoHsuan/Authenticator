@@ -11,7 +11,6 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.sp
-import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavController
 import idv.hsu.authenticator.SplashRoute
@@ -20,11 +19,12 @@ import idv.hsu.authenticator.TutorialRoute
 import idv.hsu.authenticator.presentation.viewmodel.FirstTimeOpenViewModel
 import idv.hsu.authenticator.ui.theme.colorNV900
 import kotlinx.coroutines.delay
+import org.koin.androidx.compose.koinViewModel
 
 @Composable
 fun SplashScreen(
     navController: NavController,
-    viewModel: FirstTimeOpenViewModel = hiltViewModel()
+    viewModel: FirstTimeOpenViewModel = koinViewModel()
 ) {
 
     val isFirstTime = viewModel.isFirstTime.collectAsStateWithLifecycle()

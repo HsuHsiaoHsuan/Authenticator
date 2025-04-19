@@ -31,7 +31,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
-import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavController
 import idv.hsu.authenticator.R
@@ -39,6 +38,7 @@ import idv.hsu.authenticator.presentation.screen.totplist.pages.TotpEmptyPage
 import idv.hsu.authenticator.presentation.screen.totplist.pages.TotpListPage
 import idv.hsu.authenticator.presentation.viewmodel.TotpUiState
 import idv.hsu.authenticator.presentation.viewmodel.TotpViewModel
+import org.koin.androidx.compose.koinViewModel
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -46,7 +46,7 @@ fun TotpListScreen(
     scanQrCodeAction: () -> Unit,
     navController: NavController,
 ) {
-    val viewModel: TotpViewModel = hiltViewModel<TotpViewModel>()
+    val viewModel: TotpViewModel = koinViewModel()
     val uiState = viewModel.uiStateFlow.collectAsStateWithLifecycle().value
     var appbarActions by remember { mutableStateOf<@Composable (() -> Unit)?>(null) }
 

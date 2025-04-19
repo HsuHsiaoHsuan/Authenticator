@@ -1,17 +1,16 @@
 package idv.hsu.authenticator.presentation.viewmodel
 
 import android.net.Uri
-import dagger.hilt.android.lifecycle.HiltViewModel
 import idv.hsu.authenticator.data.local.TOTPAccount
 import idv.hsu.authenticator.domain.DeleteAccountUseCase
 import idv.hsu.authenticator.domain.GetAccountUseCase
 import idv.hsu.authenticator.domain.GetAllAccountsUseCase
 import idv.hsu.authenticator.domain.InsertAccountUseCase
-import javax.inject.Inject
+import org.koin.android.annotation.KoinViewModel
 import timber.log.Timber
 
-@HiltViewModel
-class QrCodeReaderViewModel @Inject constructor(
+@KoinViewModel
+class QrCodeReaderViewModel(
     private val deleteAccountUseCase: DeleteAccountUseCase,
     private val getAccountUseCase: GetAccountUseCase,
     private val getAllAccountsUseCase: GetAllAccountsUseCase,

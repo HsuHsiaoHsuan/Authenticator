@@ -10,13 +10,12 @@ import androidx.datastore.preferences.preferencesDataStore
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.map
+import org.koin.core.annotation.Single
 import timber.log.Timber
 import java.io.IOException
-import javax.inject.Inject
-import javax.inject.Singleton
 
-@Singleton
-class DataStorePreferences @Inject constructor(
+@Single
+class DataStorePreferences (
     private val context: Context
 ) {
     private val Context.dataStore: DataStore<Preferences> by preferencesDataStore(

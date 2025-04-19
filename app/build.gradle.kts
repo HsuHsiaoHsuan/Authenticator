@@ -2,7 +2,7 @@ plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.kotlin.android)
     alias(libs.plugins.ksp)
-    alias(libs.plugins.hilt.plugin)
+//    alias(libs.plugins.hilt.plugin)
     alias(libs.plugins.compose.compiler)
 }
 
@@ -68,12 +68,14 @@ dependencies {
     implementation(libs.androidx.lifecycle.viewmodel.ktx)
     implementation(libs.androidx.fragment.ktx)
     implementation(libs.bundles.zxing)
+//    implementation(project.dependencies.platform(libs.koin.bom))
     implementation(libs.bundles.koin)
     ksp(libs.koin.ksp)
+    testImplementation(libs.bundles.koin.test)
     implementation(libs.timber)
-    implementation(libs.hilt)
-    ksp(libs.hilt.compiler)
-    implementation(libs.hilt.navigation.compose)
+//    implementation(libs.hilt)
+//    ksp(libs.hilt.compiler)
+//    implementation(libs.hilt.navigation.compose)
     implementation(libs.circle.imageview)
 
     implementation(platform(libs.androidx.compose.bom))

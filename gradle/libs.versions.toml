@@ -5,18 +5,21 @@ androidx-junit = "1.2.1"
 appcompat = "1.7.0"
 circle-imageview = "3.1.0"
 commons-codec = "1.18.0"
-compose-material = "1.3.1"
-composeBom = "2025.02.00"
+compose-material = "1.3.2"
+composeBom = "2025.04.00"
 constraintlayout = "2.2.1"
 constraintlayout-compose = "1.1.1"
-core-ktx = "1.15.0"
-datastore-preferences = "1.1.3"
+core-ktx = "1.16.0"
+datastore-preferences = "1.1.4"
 espresso-core = "3.6.1"
 fragment-ktx = "1.8.6"
 hilt = "2.55"
 hilt-navigation-compose = "1.2.0"
 junit = "4.13.2"
 koin = "4.0.4"
+koin-annotations = "2.0.0"
+koin-bom = "4.0.4"
+koin-ksp = "1.3.1"
 kotlin = "2.0.21"
 ksp = "2.0.21-1.0.28"
 legacy-support-v4 = "1.0.0"
@@ -24,11 +27,11 @@ lifecycle-livedata-ktx = "2.8.7"
 lifecycle-viewmodel-compose = "2.8.7"
 lifecycle-viewmodel-ktx = "2.8.7"
 material = "1.12.0"
-navigation-compose = "2.8.8"
-navigation-fragment-ktx = "2.8.8"
-navigation-ui-ktx = "2.8.8"
-room = "2.6.1"
-security-crypto = "1.1.0-alpha06"
+navigation-compose = "2.8.9"
+navigation-fragment-ktx = "2.8.9"
+navigation-ui-ktx = "2.8.9"
+room = "2.7.0"
+security-crypto = "1.1.0-alpha07"
 timber = "5.0.1"
 zxing-android-embedded = "4.3.0"
 zxing-core = "3.5.3"
@@ -60,11 +63,14 @@ hilt = { group = "com.google.dagger", name = "hilt-android", version.ref = "hilt
 hilt-compiler = { group = "com.google.dagger", name = "hilt-android-compiler", version.ref = "hilt" }
 hilt-navigation-compose = { group = "androidx.hilt", name = "hilt-navigation-compose", version.ref = "hilt-navigation-compose" }
 junit = { group = "junit", name = "junit", version.ref = "junit" }
-koin-android = { group = "io.insert-koin", name = "koin-android", version.ref = "koin" }
-koin-androidx-compose = { group = "io.insert-koin", name = "koin-androidx-compose", version.ref = "koin" }
-koin-androidx-navigation = { group = "io.insert-koin", name = "koin-androidx-navigation", version.ref = "koin" }
-koin-annotations = { group = "io.insert-koin", name = "koin-annotations", version.ref = "koin" }
-koin-ksp = { group = "io.insert-koin", name = "koin-ksp", version.ref = "koin" }
+#koin-bom = { module = "io.insert-koin:koin-bom", version.ref = "koin-bom" }
+koin-android = { group = "io.insert-koin", name = "koin-android", version.ref="koin"}
+koin-androidx-compose = { group = "io.insert-koin", name = "koin-androidx-compose", version.ref="koin"}
+koin-androidx-navigation = { group = "io.insert-koin", name = "koin-androidx-navigation", version.ref="koin"}
+koin-annotations = { group = "io.insert-koin", name = "koin-annotations", version.ref = "koin-annotations" }
+koin-ksp = { group = "io.insert-koin", name = "koin-ksp-compiler", version.ref = "koin-ksp" }
+koin-test = { group = "io.insert-koin", name = "koin-test", version.ref = "koin"}
+koin-junit5 = { group = "io.insert-koin", name = "koin-test-junit5", version.ref = "koin"}
 material = { group = "com.google.android.material", name = "material", version.ref = "material" }
 room = { group = "androidx.room", name = "room-runtime", version.ref = "room" }
 room-compiler = { group = "androidx.room", name = "room-compiler", version.ref = "room" }
@@ -78,6 +84,7 @@ zxing-core = { group = "com.google.zxing", name = "core", version.ref = "zxing-c
 room = ["room", "room-ktx"]
 zxing = ["zxing-android-embedded", "zxing-core"]
 koin = ["koin-android", "koin-androidx-compose", "koin-androidx-navigation", "koin-annotations"]
+koin-test = ["koin-test", "koin-junit5"]
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }

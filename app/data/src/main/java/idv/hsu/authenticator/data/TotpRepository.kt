@@ -3,9 +3,10 @@ package idv.hsu.authenticator.data
 import idv.hsu.authenticator.data.local.TOTPAccount
 import idv.hsu.authenticator.data.local.TOTPAccountDao
 import kotlinx.coroutines.flow.Flow
-import javax.inject.Inject
+import org.koin.core.annotation.Single
 
-class TotpRepository @Inject constructor(
+@Single
+class TotpRepository (
     private val totpAccountDao: TOTPAccountDao
 ) {
 

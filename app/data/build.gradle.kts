@@ -1,8 +1,10 @@
+import org.gradle.kotlin.dsl.implementation
+
 plugins {
     alias(libs.plugins.android.library)
     alias(libs.plugins.kotlin.android)
     alias(libs.plugins.ksp)
-    alias(libs.plugins.hilt.plugin)
+//    alias(libs.plugins.hilt.plugin)
 }
 
 android {
@@ -42,8 +44,12 @@ dependencies {
     implementation(libs.bundles.room)
     implementation(libs.timber)
     ksp(libs.room.compiler)
-    implementation(libs.hilt)
-    ksp(libs.hilt.compiler)
+//    implementation(libs.hilt)
+//    ksp(libs.hilt.compiler)
+//    implementation(project.dependencies.platform(libs.koin.bom))
+    implementation(libs.koin.android)
+    implementation(libs.koin.annotations)
+    ksp(libs.koin.ksp)
 
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)

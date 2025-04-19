@@ -7,27 +7,25 @@ import android.view.ViewGroup
 import android.widget.Toast
 import androidx.activity.result.ActivityResultLauncher
 import androidx.fragment.app.Fragment
-import androidx.fragment.app.viewModels
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 import com.journeyapps.barcodescanner.ScanContract
 import com.journeyapps.barcodescanner.ScanOptions
-import dagger.hilt.android.AndroidEntryPoint
 import idv.hsu.authenticator.databinding.FragmentQrCodeReaderBinding
 import idv.hsu.authenticator.presentation.viewmodel.QrCodeReaderIntent
 import idv.hsu.authenticator.presentation.viewmodel.QrCodeReaderUiState
 import idv.hsu.authenticator.presentation.viewmodel.QrCodeReaderViewModel
 import kotlinx.coroutines.launch
+import org.koin.androidx.viewmodel.ext.android.viewModel
 import timber.log.Timber
 
-@AndroidEntryPoint
 class QrCodeReaderFragment : Fragment() {
 
     private var _binding: FragmentQrCodeReaderBinding? = null
     private val binding get() = _binding!!
 
-    private val viewModel: QrCodeReaderViewModel by viewModels()
+    private val viewModel: QrCodeReaderViewModel by viewModel()
 
     private val qrCodeLauncher: ActivityResultLauncher<ScanOptions> = registerForActivityResult(
         ScanContract()

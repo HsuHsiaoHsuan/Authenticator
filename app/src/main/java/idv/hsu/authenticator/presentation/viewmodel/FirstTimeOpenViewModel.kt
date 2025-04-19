@@ -2,15 +2,14 @@ package idv.hsu.authenticator.presentation.viewmodel
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import dagger.hilt.android.lifecycle.HiltViewModel
 import idv.hsu.authenticator.domain.GetFirstTimeOpenUseCase
 import idv.hsu.authenticator.domain.SetFirstTimeOpenUseCase
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.stateIn
-import javax.inject.Inject
+import org.koin.android.annotation.KoinViewModel
 
-@HiltViewModel
-class FirstTimeOpenViewModel @Inject constructor(
+@KoinViewModel
+class FirstTimeOpenViewModel(
     private val getFirstTimeOpenUseCase: GetFirstTimeOpenUseCase,
     private val setFirstTimeOpenUseCase: SetFirstTimeOpenUseCase,
 ) : ViewModel() {
