@@ -32,7 +32,7 @@ class DataStorePreferences (
             }
         }
         .map { preferences ->
-            preferences[PreferencesKeys.IS_FIRST_TIME] ?: true
+            preferences[PreferencesKeys.IS_FIRST_TIME] != false
         }
 
     suspend fun setFirstTimeOpen(isFirstTime: Boolean) {

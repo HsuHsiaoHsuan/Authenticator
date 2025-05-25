@@ -9,6 +9,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -51,4 +52,19 @@ fun AccountInfoBlock(
             modifier = modifier.padding(end = 20.dp)
         )
     }
+}
+
+@Preview(showBackground = true)
+@Composable
+fun AccountInfoBlockPreview() {
+    AccountInfoBlock(
+        item = TotpDataItem(
+            accountName = "freeman@freeman.idv",
+            secret = "123 789",
+            issuer = "Google",
+            remainingTime = 10L
+        ),
+        sizeOfIssuer = 14.dp,
+        sizeOfAccountName = 12.dp,
+    )
 }

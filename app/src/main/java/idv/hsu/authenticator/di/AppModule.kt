@@ -4,7 +4,7 @@ import android.content.Context
 import idv.hsu.authenticator.data.DataModule
 import idv.hsu.authenticator.data.DataStorePreferences
 import idv.hsu.authenticator.domain.DeleteAccountUseCase
-import idv.hsu.authenticator.domain.DomainModule
+import idv.hsu.authenticator.di.DomainModule
 import idv.hsu.authenticator.domain.GetAccountUseCase
 import idv.hsu.authenticator.domain.GetAllAccountsUseCase
 import idv.hsu.authenticator.domain.GetFirstTimeOpenUseCase
@@ -34,7 +34,7 @@ class AppModule {
     @Single
     fun provideViewModel(
         getFirstTimeOpenUseCase: GetFirstTimeOpenUseCase,
-        setFirstTimeOpenUseCase: idv.hsu.authenticator.domain.SetFirstTimeOpenUseCase
+        setFirstTimeOpenUseCase: SetFirstTimeOpenUseCase
     ): FirstTimeOpenViewModel = FirstTimeOpenViewModel(
         getFirstTimeOpenUseCase,
         setFirstTimeOpenUseCase

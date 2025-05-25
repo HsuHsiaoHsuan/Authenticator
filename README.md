@@ -20,3 +20,8 @@ Logo Policy:
     https://about.gitlab.com/press/press-kit/
 11. Steam
     https://steamcdn-a.akamaihd.net/steamcommunity/public/images/steamworks_docs/english/Steam_Guidelines_060222.pdf
+
+TODO list:
+- [ ] Add more logos
+- [ ] Use fingerprint to unlock the app
+- 

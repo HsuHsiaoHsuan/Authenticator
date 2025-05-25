@@ -1,7 +1,13 @@
-package idv.hsu.authenticator.domain
+package idv.hsu.authenticator.di
 
 import idv.hsu.authenticator.data.DataStorePreferences
 import idv.hsu.authenticator.data.TotpRepository
+import idv.hsu.authenticator.domain.DeleteAccountUseCase
+import idv.hsu.authenticator.domain.GetAccountUseCase
+import idv.hsu.authenticator.domain.GetAllAccountsUseCase
+import idv.hsu.authenticator.domain.GetFirstTimeOpenUseCase
+import idv.hsu.authenticator.domain.InsertAccountUseCase
+import idv.hsu.authenticator.domain.SetFirstTimeOpenUseCase
 import org.koin.core.annotation.Module
 import org.koin.core.annotation.Single
 

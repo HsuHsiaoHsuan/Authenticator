@@ -20,6 +20,7 @@ import kotlinx.coroutines.launch
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import timber.log.Timber
 
+@Deprecated("Use Compose instead")
 class QrCodeReaderFragment : Fragment() {
 
     private var _binding: FragmentQrCodeReaderBinding? = null

@@ -4,7 +4,6 @@ import android.content.Context
 import androidx.room.Room
 import idv.hsu.authenticator.data.local.TOTPAccountDao
 import idv.hsu.authenticator.data.local.TOTPDatabase
-import org.koin.core.annotation.ComponentScan
 import org.koin.core.annotation.Module
 import org.koin.core.annotation.Single
 
