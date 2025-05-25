@@ -19,11 +19,13 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.constraintlayout.compose.ConstraintLayout
 import androidx.constraintlayout.compose.Dimension
 import androidx.navigation.NavController
+import androidx.navigation.compose.rememberNavController
 import idv.hsu.authenticator.R
 import idv.hsu.authenticator.TotpListRoute
 import idv.hsu.authenticator.TutorialRoute
@@ -143,4 +145,14 @@ fun TotpEmptyPage(
             contentScale = ContentScale.Crop,
         )
     }
+}
+
+@Preview(showBackground = true)
+@Composable
+fun TotpEmptyPagePreview() {
+    TotpEmptyPage(
+        modifier = Modifier,
+        navController = rememberNavController(),
+        onStartNowAction = {}
+    )
 }

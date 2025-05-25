@@ -12,6 +12,7 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import idv.hsu.authenticator.data.entities.TotpDataItem
@@ -55,4 +56,34 @@ fun TotpListPage(data: Map<String, List<TotpDataItem>>, modifier: Modifier = Mod
             Spacer(modifier = Modifier.height(totalFabHeight))
         }
     }
+}
+
+@Preview(showBackground = true)
+@Composable
+fun TotpListPagePreview() {
+    val sampleData = mapOf(
+        "Google" to listOf(
+            TotpDataItem(
+                accountName = "freeman@freeman.idv",
+                secret = "123 789",
+                issuer = "Google",
+                remainingTime = 10L
+            ),
+            TotpDataItem(
+                accountName = "user2@gmail.com",
+                secret = "456 012",
+                issuer = "Google",
+                remainingTime = 20L
+            )
+        ),
+        "GitHub" to listOf(
+            TotpDataItem(
+                accountName = "dev@github.com",
+                secret = "abc def",
+                issuer = "GitHub",
+                remainingTime = 15L
+            )
+        )
+    )
+    TotpListPage(data = sampleData)
 }

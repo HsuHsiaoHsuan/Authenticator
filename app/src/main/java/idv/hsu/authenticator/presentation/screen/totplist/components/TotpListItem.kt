@@ -26,6 +26,7 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.layout.layoutId
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.constraintlayout.compose.ExperimentalMotionApi
 import androidx.constraintlayout.compose.MotionLayout
@@ -122,4 +123,17 @@ fun TotpListItem(
             )
         }
     }
+}
+
+@Preview(showBackground = true)
+@Composable
+fun TotpListItemPreview() {
+    TotpListItem(
+        item = TotpDataItem(
+            accountName = "freeman@freeman.idv",
+            secret = "123 789",
+            issuer = "Google",
+            remainingTime = 10L
+        )
+    )
 }

@@ -23,6 +23,7 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.AnnotatedString
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.constraintlayout.compose.ConstraintLayout
@@ -137,4 +138,34 @@ fun PasscodeBlock(
             }
         }
     }
+}
+
+@Preview(showBackground = true)
+@Composable
+fun PasscodeBlockFalsePreview() {
+    PasscodeBlock(
+        item = TotpDataItem(
+            accountName = "freeman@freeman.idv",
+            secret = "123 789",
+            issuer = "Google",
+            remainingTime = 10L
+        ),
+        isShowingPasscode = false,
+        onGetPasscodeClick = {}
+    )
+}
+
+@Preview(showBackground = true)
+@Composable
+fun PasscodeBlockTruePreview() {
+    PasscodeBlock(
+        item = TotpDataItem(
+            accountName = "freeman@freeman.idv",
+            secret = "123 789",
+            issuer = "Google",
+            remainingTime = 10L
+        ),
+        isShowingPasscode = true,
+        onGetPasscodeClick = {}
+    )
 }
