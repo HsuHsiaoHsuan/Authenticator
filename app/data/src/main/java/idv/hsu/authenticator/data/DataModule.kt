@@ -20,8 +20,4 @@ class DataModule {
 
     @Single
     fun provideDao(database: TOTPDatabase): TOTPAccountDao = database.totpAccountDao()
-
-    @Single
-    fun provideRepository(totpAccountDao: TOTPAccountDao): TotpRepository =
-        TotpRepository(totpAccountDao)
 }
