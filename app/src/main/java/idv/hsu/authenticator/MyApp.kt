@@ -4,6 +4,7 @@ import android.app.Application
 import android.util.Log
 import idv.hsu.authenticator.di.AppModule
 import idv.hsu.authenticator.utils.SecretKeyUtils
+import io.kotzilla.sdk.analytics.koin.analytics
 import org.koin.android.ext.koin.androidContext
 import org.koin.android.ext.koin.androidLogger
 import org.koin.core.context.startKoin
@@ -18,6 +19,7 @@ class MyApp : Application() {
         startKoin {
             androidLogger()
             androidContext(this@MyApp)
+            analytics()
             modules(AppModule().module)
         }
 
@@ -42,14 +44,9 @@ class MyApp : Application() {
                 return
             }
 
-//            FakeCrashLibrary.log(priority, tag, message)
-//            if (t != null) {
-//                if (priority == Log.ERROR) {
-//                    FakeCrashLibrary.logError(t)
-//                } else if (priority == Log.WARN) {
-//                    FakeCrashLibrary.logWarning(t)
-//                }
-//            }
+            // Forward logs above DEBUG level to your crash-reporting tool
+            // (e.g., Firebase Crashlytics or Sentry) if one is configured.
+            // Currently, no crash reporting implementation is provided.
         }
     }
 }

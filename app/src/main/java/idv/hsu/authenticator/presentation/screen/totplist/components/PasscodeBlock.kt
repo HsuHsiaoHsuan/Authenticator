@@ -4,16 +4,20 @@ import android.widget.Toast
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.isSystemInDarkTheme
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.Text
+import androidx.compose.material3.pulltorefresh.PullToRefreshDefaults.indicatorColor
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -93,32 +97,52 @@ fun PasscodeBlock(
             }
 
             if (isShowingPasscode) {
-                Text(
-                    text = formattedText,
-                    color = if (isSystemInDarkTheme()) MaterialTheme.colorScheme.primary else colorNV800,
-                    fontSize = 34.sp,
-                    fontWeight = FontWeight(700),
+                Column(
+                    verticalArrangement = Arrangement.Center,
                     modifier = Modifier
-                        .constrainAs(textPasscode) {
-                            start.linkTo(parent.start)
-                            top.linkTo(parent.top)
-                            bottom.linkTo(progressBar.top)
-                        }
-                )
+                ) {
+                    Text(
+                        text = formattedText,
+                        color = if (isSystemInDarkTheme()) MaterialTheme.colorScheme.primary else colorNV800,
+                        fontSize = 34.sp,
+                        fontWeight = FontWeight(700),
+                    )
 
-                PasscodeCountdownProgress(
+                    PasscodeCountdownProgress(
                     progress = progress,
                     modifier = Modifier
-                        .constrainAs(progressBar) {
-                            start.linkTo(textPasscode.start)
-                            end.linkTo(textPasscode.end)
-                            top.linkTo(textPasscode.bottom)
-                            width = Dimension.fillToConstraints
-                        }
-                        .padding(top = 4.dp),
+                        .padding(top = 4.dp)
+                        .width(72.dp), // FIXME: how to align width with TextView?
                     trackColor = colorNV100,
                     indicatorColor = colorP400,
                 )
+                }
+//                Text(
+//                    text = formattedText,
+//                    color = if (isSystemInDarkTheme()) MaterialTheme.colorScheme.primary else colorNV800,
+//                    fontSize = 34.sp,
+//                    fontWeight = FontWeight(700),
+//                    modifier = Modifier
+//                        .constrainAs(textPasscode) {
+//                            start.linkTo(parent.start)
+//                            top.linkTo(parent.top)
+//                            bottom.linkTo(progressBar.top)
+//                        }
+//                )
+//
+//                PasscodeCountdownProgress(
+//                    progress = progress,
+//                    modifier = Modifier
+//                        .constrainAs(progressBar) {
+//                            start.linkTo(textPasscode.start)
+//                            end.linkTo(textPasscode.end)
+//                            top.linkTo(textPasscode.bottom)
+//                            width = Dimension.fillToConstraints
+//                        }
+//                        .padding(top = 4.dp),
+//                    trackColor = colorNV100,
+//                    indicatorColor = colorP400,
+//                )
             }
         }
 

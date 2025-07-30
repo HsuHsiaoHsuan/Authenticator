@@ -124,25 +124,25 @@ fun TotpListScreen(
                         data = uiState.accountsGroup,
                         modifier = Modifier.fillMaxSize()
                     )
-                    appbarActions = {
-                        IconButton(onClick = {
-                            isSearching = !isSearching
-                        }) {
-                            Icon(
-                                imageVector = Icons.Rounded.Search,
-                                contentDescription = "Search"
-                            )
-                        }
-                        IconButton(onClick = {
-                            scanQrCodeAction.invoke()
-                        }) {
-                            Icon(
-                                imageVector = Icons.Rounded.Add,
-                                contentDescription = "Add"
-                            )
-
-                        }
-                    }
+//                    appbarActions = {
+//                        IconButton(onClick = {
+//                            isSearching = !isSearching
+//                        }) {
+//                            Icon(
+//                                imageVector = Icons.Rounded.Search,
+//                                contentDescription = "Search"
+//                            )
+//                        }
+//                        IconButton(onClick = {
+//                            scanQrCodeAction.invoke()
+//                        }) {
+//                            Icon(
+//                                imageVector = Icons.Rounded.Add,
+//                                contentDescription = "Add"
+//                            )
+//
+//                        }
+//                    }
                 }
 
                 is TotpUiState.NoTotpAccount -> {

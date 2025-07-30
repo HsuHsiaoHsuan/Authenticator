@@ -95,16 +95,16 @@ fun TotpListItem(
                 )
             }
 
-            if (!isExpanded) {
-                Image(
-                    painter = painterResource(id = item.getIssuerIcon(isSystemInDarkTheme())),
-                    contentDescription = null,
-                    modifier = Modifier
-                        .size(36.dp)
-                        .layoutId("imageLogo"),
-                    contentScale = ContentScale.Crop
-                )
-            }
+//            if (!isExpanded) {
+//                Image(
+//                    painter = painterResource(id = item.getIssuerIcon(isSystemInDarkTheme())),
+//                    contentDescription = null,
+//                    modifier = Modifier
+//                        .size(36.dp)
+//                        .layoutId("imageLogo"),
+//                    contentScale = ContentScale.Crop
+//                )
+//            }
 
             AccountInfoBlock(
                 item = item,

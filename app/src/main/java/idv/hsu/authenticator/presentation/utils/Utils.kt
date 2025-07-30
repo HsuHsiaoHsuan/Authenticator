@@ -1,11 +1,12 @@
 package idv.hsu.authenticator.presentation.utils
 
-import android.net.Uri
+import androidx.core.net.toUri
 import idv.hsu.authenticator.data.local.TOTPAccount
 import idv.hsu.authenticator.utils.SecretKeyUtils
 import org.apache.commons.codec.binary.Base32
 import timber.log.Timber
 import java.nio.ByteBuffer
+import java.util.Locale
 import javax.crypto.Mac
 import javax.crypto.spec.SecretKeySpec
 
@@ -28,7 +29,7 @@ fun generateTOTPWithTime(secret: String, time: Long, timeStepSeconds: Long = 30)
             (hash[offset + 3].toInt() and 0xff)
 
     val otp = binary % 1000000
-    val otpString = String.format("%06d", otp)
+    val otpString = String.format(Locale.US, "%06d", otp)
 
     val timeRemaining = timeStepSeconds - (time % timeStepSeconds)
 
@@ -54,15 +55,16 @@ fun generateTOTP(secret: String, time: Long, timeStepSeconds: Long = 30): String
             (hash[offset + 3].toInt() and 0xff)
 
     val otp = binary % 1000000
-    val otpString = String.format("%06d", otp)
+    val otpString = String.format(Locale.US, "%06d", otp)
 
     return otpString
 }
 
 fun convertTotpDataToTOTPAccount(qrCodeData: String): TOTPAccount? {
     if (qrCodeData.startsWith("otpauth://totp/")) {
-        val uri = Uri.parse(qrCodeData)
-        val accountName = uri.path?.substring(1)?.split(":")?.get(1) ?: ""
+        val uri = qrCodeData.toUri()
+        val path = uri.path?.substring(1).orEmpty()
+        val accountName = path.substringAfter(':', path)
         val secret = uri.getQueryParameter("secret")
         val issuer = uri.getQueryParameter("issuer") ?: ""
         Timber.d("accountName: $accountName")

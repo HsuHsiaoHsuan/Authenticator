@@ -6,17 +6,17 @@
         start: ['parent', 'start', 4],
         visibility: 'gone',
       },
-      imageLogo: {
-        top: ['parent', 'top'],
-        start: ['parent', 'start', 12],
-        bottom: ['parent', 'bottom'],
-        visibility: 'visible',
-      },
+//      imageLogo: {
+//        top: ['parent', 'top'],
+//        start: ['parent', 'start', 12],
+//        bottom: ['parent', 'bottom'],
+//        visibility: 'visible',
+//      },
       accountColumn: {
         width: 'spread',
         height: 'wrap',
         top: ['parent', 'top'],
-        start: ['imageLogo', 'end', 8],
+        start: ['parent', 'start', 16],
         bottom: ['parent', 'bottom'],
         end: ['passCodeColumn', 'start'],
       },
@@ -34,12 +34,12 @@
         bottom: ['accountColumn', 'bottom'],
         visibility: 'visible',
       },
-      imageLogo: {
-        top: ['parent', 'top'],
-        start: ['parent', 'start', 12],
-        bottom: ['parent', 'bottom'],
-        visibility: 'gone',
-      },
+//      imageLogo: {
+//        top: ['parent', 'top'],
+//        start: ['parent', 'start', 12],
+//        bottom: ['parent', 'bottom'],
+//        visibility: 'gone',
+//      },
       accountColumn: {
         width: 'spread',
         height: 'wrap',
@@ -62,7 +62,8 @@
       KeyFrames: {
         KeyAttributes: [
           {
-            target: ['imageArrowBack', 'imageLogo', 'accountColumn', 'passCodeColumn'],
+//            target: ['imageArrowBack', 'imageLogo', 'accountColumn', 'passCodeColumn'],
+            target: ['imageArrowBack', 'accountColumn', 'passCodeColumn'],
             frames: [50],
             scaleX: 1,
             scaleY: 1

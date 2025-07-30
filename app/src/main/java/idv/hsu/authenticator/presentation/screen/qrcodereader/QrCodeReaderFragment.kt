@@ -65,12 +65,12 @@ class QrCodeReaderFragment : Fragment() {
                         is QrCodeReaderUiState.Loading -> {
                         }
 
-                        is QrCodeReaderUiState.SaveTOPTDataSuccess -> {
+                        is QrCodeReaderUiState.SaveTOTPDataSuccess -> {
                             Toast.makeText(requireContext(), "Save Success", Toast.LENGTH_LONG)
                                 .show()
                         }
 
-                        is QrCodeReaderUiState.SaveTOPTDataFailed -> {
+                        is QrCodeReaderUiState.SaveTOTPDataFailed -> {
                             Toast.makeText(
                                 requireContext(),
                                 uiState.errorMessage,

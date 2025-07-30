@@ -23,31 +23,37 @@ class QrCodeReaderViewModel(
             is QrCodeReaderIntent.SaveTOTPAccount -> {
                 val qrCodeData = intent.totpData
                 setUiState(QrCodeReaderUiState.Loading)
-                if (qrCodeData.startsWith("otpauth://totp/")) {
-                    val uri = Uri.parse(qrCodeData)
-                    val accountName = uri.path?.substring(1) // 去掉前面的 "/"
-                    val secret = uri.getQueryParameter("secret")
-                    val issuer = uri.getQueryParameter("issuer") ?: ""
-                    Timber.d("insert accountName: $accountName")
-                    Timber.d("insert secret: $secret")
-                    Timber.d("insert issuer: $issuer")
-
-                    if (secret != null && accountName != null) {
-                        val result = insertAccountUseCase(
-                            TOTPAccount(
-                                accountName = accountName,
-                                secret = secret,
-                                issuer = issuer
-                            )
-                        )
-                        Timber.d("Insert result: $result")
-                    } else {
-                        setUiState(QrCodeReaderUiState.SaveTOPTDataFailed("Invalid QR Code"))
-                    }
-                } else {
-                    setUiState(QrCodeReaderUiState.SaveTOPTDataFailed("Unsupported QR Code format"))
+                if (!qrCodeData.startsWith("otpauth://totp/")) {
+                    setUiState(QrCodeReaderUiState.SaveTOTPDataFailed("Unsupported QR Code format"))
+                    return
                 }
-                setUiState(QrCodeReaderUiState.SaveTOPTDataSuccess)
+
+                val uri = Uri.parse(qrCodeData)
+                val accountName = uri.path?.substring(1) // 去掉前面的 "/"
+                val secret = uri.getQueryParameter("secret")
+                val issuer = uri.getQueryParameter("issuer") ?: ""
+                Timber.d("insert accountName: $accountName")
+                Timber.d("insert secret: $secret")
+                Timber.d("insert issuer: $issuer")
+
+                if (secret == null || accountName == null) {
+                    setUiState(QrCodeReaderUiState.SaveTOTPDataFailed("Invalid QR Code"))
+                    return
+                }
+
+                val result = insertAccountUseCase(
+                    TOTPAccount(
+                        accountName = accountName,
+                        secret = secret,
+                        issuer = issuer
+                    )
+                )
+                Timber.d("Insert result: $result")
+                if (result > 0) {
+                    setUiState(QrCodeReaderUiState.SaveTOTPDataSuccess)
+                } else {
+                    setUiState(QrCodeReaderUiState.SaveTOTPDataFailed("Failed to save TOTP data"))
+                }
             }
         }
     }
@@ -61,6 +67,6 @@ sealed class QrCodeReaderIntent {
 sealed class QrCodeReaderUiState {
     data object Idle : QrCodeReaderUiState()
     data object Loading : QrCodeReaderUiState()
-    data object SaveTOPTDataSuccess : QrCodeReaderUiState()
-    data class SaveTOPTDataFailed(val errorMessage: String) : QrCodeReaderUiState()
+    data object SaveTOTPDataSuccess : QrCodeReaderUiState()
+    data class SaveTOTPDataFailed(val errorMessage: String) : QrCodeReaderUiState()
 }

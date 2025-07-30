@@ -4,6 +4,7 @@ plugins {
     alias(libs.plugins.ksp)
 //    alias(libs.plugins.hilt.plugin)
     alias(libs.plugins.compose.compiler)
+    id("io.kotzilla.kotzilla-plugin")
 }
 
 android {
@@ -50,6 +51,7 @@ android {
 }
 
 dependencies {
+    implementation("io.kotzilla:kotzilla-sdk:1.1.0")
 
     implementation(project(":app:data"))
 
@@ -87,6 +89,7 @@ dependencies {
     implementation(libs.androidx.constraintlayout.compose)
 
     testImplementation(libs.junit)
+    testImplementation(libs.mockk)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
 }

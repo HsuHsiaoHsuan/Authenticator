@@ -23,12 +23,12 @@
     <string name="dummy_content">DUMMY\nCONTENT</string>
 
     <string name="tutorial_welcome_to_authenticator">Welcome to Authenticator!</string>
-    <string name="tutorial_get_start">Get Start!</string>
+    <string name="tutorial_get_start">Get Started!</string>
     <string name="tutorial_page1_title">What is two-factor authentication</string>
     <string name="tutorial_page1_subtitle">some description of OOOXXX OOOXX XOOOXXXOOOXXX</string>
     <string name="tutorial_page2_title">How it works?</string>
     <string name="tutorial_page2_subtitle">some description of OOOXXX OOOXX XOOOXXXOOOXXX</string>
-    <string name="tutorial_page3_title">6 digit passcode to get your account protect.</string>
+    <string name="tutorial_page3_title">6-digit passcode to get your account protect.</string>
     <string name="tutorial_page3_subtitle">some description of OOOXXX OOOXX XOOOXXXOOOXXX</string>
     <string name="tutorial_page4_title">double confirm, login more safe.</string>
     <string name="tutorial_page4_subtitle">some description of OOOXXX OOOXX XOOOXXXOOOXXX</string>
