@@ -1,10 +1,10 @@
 package idv.hsu.authenticator.presentation.utils
 
-import androidx.core.net.toUri
 import idv.hsu.authenticator.data.local.TOTPAccount
 import idv.hsu.authenticator.utils.SecretKeyUtils
 import org.apache.commons.codec.binary.Base32
-import timber.log.Timber
+import java.net.URI
+import java.net.URLDecoder
 import java.nio.ByteBuffer
 import java.util.Locale
 import javax.crypto.Mac
@@ -61,24 +61,50 @@ fun generateTOTP(secret: String, time: Long, timeStepSeconds: Long = 30): String
 }
 
 fun convertTotpDataToTOTPAccount(qrCodeData: String): TOTPAccount? {
-    if (qrCodeData.startsWith("otpauth://totp/")) {
-        val uri = qrCodeData.toUri()
-        val path = uri.path?.substring(1).orEmpty()
-        val accountName = path.substringAfter(':', path)
-        val secret = uri.getQueryParameter("secret")
-        val issuer = uri.getQueryParameter("issuer") ?: ""
-        Timber.d("accountName: $accountName")
-        Timber.d("secret: $secret")
-        Timber.d("issuer: $issuer")
-        if (accountName.isEmpty() || secret == null) {
-            return null
-        }
-        return TOTPAccount(
-            accountName = accountName,
-            secret = SecretKeyUtils.encryptWithKeystore(secret),
-            issuer = issuer
-        )
-    } else {
+    val uri = runCatching { URI(qrCodeData) }.getOrNull() ?: return null
+    if (!uri.scheme.equals("otpauth", ignoreCase = true) ||
+        !uri.host.equals("totp", ignoreCase = true)
+    ) {
         return null
     }
+
+    val label = uri.path?.removePrefix("/").orEmpty()
+    val accountName = label.substringAfter(':', label).trim()
+    val labelIssuer = label.substringBefore(':', missingDelimiterValue = "").trim()
+    val queryParams = parseQueryParams(uri.rawQuery)
+    val secret = queryParams["secret"]?.takeIf { it.isNotBlank() } ?: return null
+    val issuer = queryParams["issuer"]?.takeIf { it.isNotBlank() } ?: labelIssuer
+
+    if (accountName.isBlank()) {
+        return null
+    }
+
+    return TOTPAccount(
+        accountName = accountName,
+        secret = SecretKeyUtils.encryptWithKeystore(secret),
+        issuer = issuer
+    )
+}
+
+private fun parseQueryParams(rawQuery: String?): Map<String, String> {
+    if (rawQuery.isNullOrBlank()) {
+        return emptyMap()
+    }
+
+    return rawQuery.split("&")
+        .mapNotNull { pair ->
+            val separatorIndex = pair.indexOf('=')
+            val rawKey = if (separatorIndex >= 0) pair.substring(0, separatorIndex) else pair
+            if (rawKey.isBlank()) {
+                return@mapNotNull null
+            }
+
+            val rawValue = if (separatorIndex >= 0) pair.substring(separatorIndex + 1) else ""
+            urlDecode(rawKey) to urlDecode(rawValue)
+        }
+        .toMap()
+}
+
+private fun urlDecode(value: String): String {
+    return runCatching { URLDecoder.decode(value, "UTF-8") }.getOrDefault(value)
 }

@@ -38,14 +38,22 @@ class TotpViewModel (
                 if (data == null) {
                     setUiState(TotpUiState.SaveTOTPAccountFailed("Invalid QR Code"))
                 } else {
-                    insertAccountUseCase(data)
-                    setUiState(TotpUiState.SaveTOTPAccountSuccess)
+                    val result = insertAccountUseCase(data)
+                    if (result > 0) {
+                        setUiState(TotpUiState.SaveTOTPAccountSuccess)
+                    } else {
+                        setUiState(TotpUiState.SaveTOTPAccountFailed("Duplicated."))
+                    }
                 }
             }
 
             is TotpIntent.DeleteTOTPAccount -> {
-                deleteAccountUseCase(intent.accountName)
-                setUiState(TotpUiState.DeleteTOTPAccountSuccess(intent.accountName))
+                val result = deleteAccountUseCase(intent.issuer, intent.accountName)
+                if (result > 0) {
+                    setUiState(TotpUiState.DeleteTOTPAccountSuccess(intent.accountName))
+                } else {
+                    setUiState(TotpUiState.DeleteTOTPAccountFailed(intent.accountName))
+                }
             }
 
         }
@@ -94,7 +102,7 @@ class TotpViewModel (
 
 sealed class TotpIntent {
     data class SaveTOTPAccount(val totpData: String) : TotpIntent()
-    data class DeleteTOTPAccount(val accountName: String) : TotpIntent()
+    data class DeleteTOTPAccount(val issuer: String, val accountName: String) : TotpIntent()
 }
 
 sealed class TotpUiState {

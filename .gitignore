@@ -29,6 +29,10 @@ render.experimental.xml
 # Google Services (e.g. APIs or Firebase)
 google-services.json
 
+# Analytics/service keys
+kotzilla.json
+kotzilla.key
+
 # Android Profiling
 *.hprof
 

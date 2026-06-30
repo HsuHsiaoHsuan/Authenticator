@@ -7,5 +7,6 @@ import org.koin.core.annotation.Single
 class DeleteAccountUseCase(
     private val repository: TotpRepository
 ) {
-    suspend operator fun invoke(accountName: String) = repository.deleteAccountByName(accountName)
+    suspend operator fun invoke(issuer: String, accountName: String) =
+        repository.deleteAccount(issuer, accountName)
 }

@@ -1,9 +1,7 @@
 package idv.hsu.authenticator.presentation.viewmodel
 
 import androidx.lifecycle.viewModelScope
-import idv.hsu.authenticator.domain.GetFirstTimeOpenUseCase
 import idv.hsu.authenticator.domain.InsertAccountUseCase
-import idv.hsu.authenticator.domain.SetFirstTimeOpenUseCase
 import idv.hsu.authenticator.presentation.utils.convertTotpDataToTOTPAccount
 import kotlinx.coroutines.launch
 import org.koin.android.annotation.KoinViewModel
@@ -11,8 +9,6 @@ import org.koin.android.annotation.KoinViewModel
 @KoinViewModel
 class MainViewModel(
     private val insertAccountUseCase: InsertAccountUseCase,
-    private val getFirstTimeOpenUseCase: GetFirstTimeOpenUseCase,
-    private val setFirstTimeOpenUseCase: SetFirstTimeOpenUseCase,
 ) : MVIViewModel<MainIntent, MainUiState>(
     initialUi = MainUiState.Idle
 ) {

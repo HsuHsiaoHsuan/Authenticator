@@ -14,15 +14,15 @@ class TotpRepository (
         return totpAccountDao.insertAccount(account)
     }
 
-    suspend fun getAccountByName(accountName: String): TOTPAccount? {
-        return totpAccountDao.getAccountByName(accountName)
+    suspend fun getAccount(issuer: String, accountName: String): TOTPAccount? {
+        return totpAccountDao.getAccount(issuer, accountName)
     }
 
     fun getAllAccounts(): Flow<List<TOTPAccount>> {
         return totpAccountDao.getAllAccounts()
     }
 
-    suspend fun deleteAccountByName(accountName: String): Int {
-        return totpAccountDao.deleteAccountByName(accountName)
+    suspend fun deleteAccount(issuer: String, accountName: String): Int {
+        return totpAccountDao.deleteAccount(issuer, accountName)
     }
 }

@@ -1,19 +1,11 @@
 package idv.hsu.authenticator.presentation.viewmodel
 
-import android.net.Uri
-import idv.hsu.authenticator.data.local.TOTPAccount
-import idv.hsu.authenticator.domain.DeleteAccountUseCase
-import idv.hsu.authenticator.domain.GetAccountUseCase
-import idv.hsu.authenticator.domain.GetAllAccountsUseCase
 import idv.hsu.authenticator.domain.InsertAccountUseCase
+import idv.hsu.authenticator.presentation.utils.convertTotpDataToTOTPAccount
 import org.koin.android.annotation.KoinViewModel
-import timber.log.Timber
 
 @KoinViewModel
 class QrCodeReaderViewModel(
-    private val deleteAccountUseCase: DeleteAccountUseCase,
-    private val getAccountUseCase: GetAccountUseCase,
-    private val getAllAccountsUseCase: GetAllAccountsUseCase,
     private val insertAccountUseCase: InsertAccountUseCase
 ) : MVIViewModel<QrCodeReaderIntent, QrCodeReaderUiState>(
     initialUi = QrCodeReaderUiState.Idle
@@ -23,36 +15,17 @@ class QrCodeReaderViewModel(
             is QrCodeReaderIntent.SaveTOTPAccount -> {
                 val qrCodeData = intent.totpData
                 setUiState(QrCodeReaderUiState.Loading)
-                if (!qrCodeData.startsWith("otpauth://totp/")) {
-                    setUiState(QrCodeReaderUiState.SaveTOTPDataFailed("Unsupported QR Code format"))
-                    return
-                }
-
-                val uri = Uri.parse(qrCodeData)
-                val accountName = uri.path?.substring(1) // 去掉前面的 "/"
-                val secret = uri.getQueryParameter("secret")
-                val issuer = uri.getQueryParameter("issuer") ?: ""
-                Timber.d("insert accountName: $accountName")
-                Timber.d("insert secret: $secret")
-                Timber.d("insert issuer: $issuer")
-
-                if (secret == null || accountName == null) {
+                val account = convertTotpDataToTOTPAccount(qrCodeData)
+                if (account == null) {
                     setUiState(QrCodeReaderUiState.SaveTOTPDataFailed("Invalid QR Code"))
                     return
                 }
 
-                val result = insertAccountUseCase(
-                    TOTPAccount(
-                        accountName = accountName,
-                        secret = secret,
-                        issuer = issuer
-                    )
-                )
-                Timber.d("Insert result: $result")
+                val result = insertAccountUseCase(account)
                 if (result > 0) {
                     setUiState(QrCodeReaderUiState.SaveTOTPDataSuccess)
                 } else {
-                    setUiState(QrCodeReaderUiState.SaveTOTPDataFailed("Failed to save TOTP data"))
+                    setUiState(QrCodeReaderUiState.SaveTOTPDataFailed("Duplicated."))
                 }
             }
         }

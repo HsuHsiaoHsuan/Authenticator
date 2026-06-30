@@ -7,5 +7,6 @@ import org.koin.core.annotation.Single
 class GetAccountUseCase(
     private val repository: TotpRepository
 ) {
-    suspend operator fun invoke(accountName: String) = repository.getAccountByName(accountName)
+    suspend operator fun invoke(issuer: String, accountName: String) =
+        repository.getAccount(issuer, accountName)
 }

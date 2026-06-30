@@ -6,7 +6,6 @@ import android.widget.Toast
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import androidx.activity.result.ActivityResultLauncher
-import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
@@ -16,16 +15,15 @@ import com.journeyapps.barcodescanner.ScanOptions
 import idv.hsu.authenticator.presentation.screen.splash.SplashScreen
 import idv.hsu.authenticator.presentation.screen.totplist.TotpListScreen
 import idv.hsu.authenticator.presentation.screen.tutorial.TutorialScreen
-import idv.hsu.authenticator.presentation.viewmodel.FirstTimeOpenViewModel
 import idv.hsu.authenticator.presentation.viewmodel.MainIntent
 import idv.hsu.authenticator.presentation.viewmodel.MainViewModel
 import idv.hsu.authenticator.ui.theme.AppTheme
+import org.koin.androidx.viewmodel.ext.android.viewModel
 import timber.log.Timber
 
 class MainActivity : AppCompatActivity() {
 
-    private val viewModel: MainViewModel by viewModels()
-    private val firstTimeOpenViewModel: FirstTimeOpenViewModel by viewModels()
+    private val viewModel: MainViewModel by viewModel()
 
     private val qrCodeLauncher: ActivityResultLauncher<ScanOptions> = registerForActivityResult(
         ScanContract()
@@ -71,7 +69,7 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun handleQRCodeData(qrCodeData: String) {
-        Timber.d("QR Code Data: $qrCodeData")
+        Timber.d("QR code scanned")
         viewModel.onIntent(MainIntent.SaveTotpAccount(qrCodeData))
     }
 }

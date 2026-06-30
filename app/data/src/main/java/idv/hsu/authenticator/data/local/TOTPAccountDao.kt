@@ -8,15 +8,15 @@ import kotlinx.coroutines.flow.Flow
 
 @Dao
 interface TOTPAccountDao {
-    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    @Insert(onConflict = OnConflictStrategy.IGNORE)
     suspend fun insertAccount(account: TOTPAccount): Long
 
-    @Query("SELECT * FROM totp_accounts WHERE accountName = :accountName")
-    suspend fun getAccountByName(accountName: String): TOTPAccount?
+    @Query("SELECT * FROM totp_accounts WHERE issuer = :issuer AND accountName = :accountName")
+    suspend fun getAccount(issuer: String, accountName: String): TOTPAccount?
 
     @Query("SELECT * FROM totp_accounts")
     fun getAllAccounts(): Flow<List<TOTPAccount>>
 
-    @Query("DELETE FROM totp_accounts WHERE accountName = :accountName")
-    suspend fun deleteAccountByName(accountName: String): Int
+    @Query("DELETE FROM totp_accounts WHERE issuer = :issuer AND accountName = :accountName")
+    suspend fun deleteAccount(issuer: String, accountName: String): Int
 }

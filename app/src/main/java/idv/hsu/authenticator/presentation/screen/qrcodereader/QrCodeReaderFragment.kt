@@ -84,7 +84,7 @@ class QrCodeReaderFragment : Fragment() {
     }
 
     private fun handleQRCodeData(qrCodeData: String) {
-        Timber.d("QR Code Data: $qrCodeData")
+        Timber.d("QR code scanned")
         viewModel.onIntent(QrCodeReaderIntent.SaveTOTPAccount(qrCodeData))
     }
 

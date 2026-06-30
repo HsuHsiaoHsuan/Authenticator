@@ -4,7 +4,6 @@ import android.app.Application
 import android.util.Log
 import idv.hsu.authenticator.di.AppModule
 import idv.hsu.authenticator.utils.SecretKeyUtils
-import io.kotzilla.sdk.analytics.koin.analytics
 import org.koin.android.ext.koin.androidContext
 import org.koin.android.ext.koin.androidLogger
 import org.koin.core.context.startKoin
@@ -19,7 +18,6 @@ class MyApp : Application() {
         startKoin {
             androidLogger()
             androidContext(this@MyApp)
-            analytics()
             modules(AppModule().module)
         }
 
@@ -34,7 +32,7 @@ class MyApp : Application() {
                 }
             })
         } else {
-            Timber.plant(CrashReportingTree());
+            Timber.plant(CrashReportingTree())
         }
     }
 

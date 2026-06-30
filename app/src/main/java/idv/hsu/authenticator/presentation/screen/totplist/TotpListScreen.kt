@@ -48,7 +48,6 @@ fun TotpListScreen(
 ) {
     val viewModel: TotpViewModel = koinViewModel()
     val uiState = viewModel.uiStateFlow.collectAsStateWithLifecycle().value
-    var appbarActions by remember { mutableStateOf<@Composable (() -> Unit)?>(null) }
 
     var isSearching by remember { mutableStateOf(false) }
     var value by remember { mutableStateOf("") }
@@ -71,7 +70,8 @@ fun TotpListScreen(
                         leadingIcon = {
                             IconButton(
                                 onClick = {
-                                    isSearching = !isSearching
+                                    isSearching = false
+                                    value = ""
                                 }
                             ) {
                                 Icon(
@@ -89,7 +89,7 @@ fun TotpListScreen(
                             ) {
                                 Icon(
                                     imageVector = Icons.Rounded.Close,
-                                    contentDescription = "Clean"
+                                    contentDescription = "Clear"
                                 )
                             }
                         }
@@ -104,7 +104,22 @@ fun TotpListScreen(
                             titleContentColor = if (isSystemInDarkTheme()) MaterialTheme.colorScheme.onPrimaryContainer else Color.Black,
                             actionIconContentColor = if (isSystemInDarkTheme()) MaterialTheme.colorScheme.onPrimaryContainer else Color.Black
                         ),
-                        actions = { appbarActions?.invoke() }
+                        actions = {
+                            if (uiState is TotpUiState.ShowTOTPAccounts) {
+                                IconButton(onClick = { isSearching = true }) {
+                                    Icon(
+                                        imageVector = Icons.Rounded.Search,
+                                        contentDescription = "Search"
+                                    )
+                                }
+                                IconButton(onClick = scanQrCodeAction) {
+                                    Icon(
+                                        imageVector = Icons.Rounded.Add,
+                                        contentDescription = "Add"
+                                    )
+                                }
+                            }
+                        }
                     )
                 }
             }
@@ -120,29 +135,24 @@ fun TotpListScreen(
                 is TotpUiState.Loading -> Unit
                 is TotpUiState.SaveTOTPAccountFailed -> Unit
                 is TotpUiState.ShowTOTPAccounts -> {
+                    val query = value.trim()
+                    val accountsGroup = if (query.isBlank()) {
+                        uiState.accountsGroup
+                    } else {
+                        uiState.accountsGroup
+                            .mapValues { (_, accounts) ->
+                                accounts.filter { account ->
+                                    account.accountName.contains(query, ignoreCase = true) ||
+                                            account.issuer.orEmpty().contains(query, ignoreCase = true)
+                                }
+                            }
+                            .filterValues { it.isNotEmpty() }
+                    }
+
                     TotpListPage(
-                        data = uiState.accountsGroup,
+                        data = accountsGroup,
                         modifier = Modifier.fillMaxSize()
                     )
-//                    appbarActions = {
-//                        IconButton(onClick = {
-//                            isSearching = !isSearching
-//                        }) {
-//                            Icon(
-//                                imageVector = Icons.Rounded.Search,
-//                                contentDescription = "Search"
-//                            )
-//                        }
-//                        IconButton(onClick = {
-//                            scanQrCodeAction.invoke()
-//                        }) {
-//                            Icon(
-//                                imageVector = Icons.Rounded.Add,
-//                                contentDescription = "Add"
-//                            )
-//
-//                        }
-//                    }
                 }
 
                 is TotpUiState.NoTotpAccount -> {
@@ -151,7 +161,6 @@ fun TotpListScreen(
                         navController = navController,
                         onStartNowAction = scanQrCodeAction
                     )
-                    appbarActions = null
                 }
 
                 is TotpUiState.SaveTOTPAccountSuccess,
